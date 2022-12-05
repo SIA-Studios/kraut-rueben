@@ -51,20 +51,21 @@ class LeftSide extends StatelessWidget {
         width: 200,
         child: Container(
             decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [backgroundStartColor, backgroundEndColor],
-              stops: [0.0, 1.0]),
+              gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [backgroundStartColor, backgroundEndColor],
+                  stops: [0.0, 1.0]),
             ),
             child: Container(
               color: Colors.white.withOpacity(0.15),
               child: Column(
-              children: [
-                WindowTitleBarBox(child: MoveWindow()),
-                Expanded(child: SideBar())
-              ],
-            ),)));
+                children: [
+                  WindowTitleBarBox(child: MoveWindow()),
+                  Expanded(child: SideBar())
+                ],
+              ),
+            )));
   }
 }
 
@@ -97,16 +98,16 @@ class RightSide extends StatelessWidget {
 }
 
 final buttonColors = WindowButtonColors(
-    iconNormal: const Color(0xFF805306),
-    mouseOver: const Color(0xFFF6A00C),
-    mouseDown: const Color(0xFF805306),
-    iconMouseOver: const Color(0xFF805306),
-    iconMouseDown: const Color(0xFFFFD500));
+    iconNormal: const Color.fromARGB(255, 37, 38, 38),
+    mouseOver: const Color.fromARGB(255, 4, 96, 48),
+    mouseDown: const Color.fromARGB(255, 4, 96, 48),
+    iconMouseOver: Colors.white,
+    iconMouseDown: Colors.white);
 
 final closeButtonColors = WindowButtonColors(
     mouseOver: const Color(0xFFD32F2F),
     mouseDown: const Color(0xFFB71C1C),
-    iconNormal: const Color(0xFF805306),
+    iconNormal: const Color.fromARGB(255, 37, 38, 38),
     iconMouseOver: Colors.white);
 
 class WindowButtons extends StatelessWidget {
