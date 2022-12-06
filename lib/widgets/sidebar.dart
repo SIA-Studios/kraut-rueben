@@ -5,8 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:bitsdojo_window_platform_interface/bitsdojo_window_platform_interface.dart';
 import 'package:kraut_rueben/sidemenu.dart';
 
-final double sidebarWidth = 60;
-
 class SideBar extends ConsumerStatefulWidget {
   final List<SidebarItem> items;
   final ValueChanged<int>? onTap;
@@ -58,109 +56,66 @@ class _SideBarState extends ConsumerState<SideBar>
         MediaQuery.of(context).viewInsets.top -
         padding * 2 -
         3;
-    double tileHeight = sidebarHeight / widget.items.length;
+    double tileHeight = 30;
     var tiles = createTiles(tileHeight);
 
     return Padding(
-      padding: EdgeInsets.all(padding),
+      padding: const EdgeInsets.only(right: 10),
       child: Row(
         children: [
-          ClipRRect(
-              clipBehavior: Clip.antiAlias,
-              borderRadius: BorderRadius.circular(60),
-              child: SizedBox(
-                width: sidebarWidth,
-                child: Stack(
-                  children: [
-                    Container(
-                      color: Colors.white12,
-                    ),
-                    AnimatedPositioned(
-                      left: 0,
-                      right: 0,
-                      top: tileHeight *
-                          (getTabDirection()
-                              ? currentIndexAbsDelayed.toDouble()
-                              : currentIndexAbs.toDouble()),
-                      bottom: sidebarHeight -
-                          (tileHeight *
-                                  (getTabDirection()
-                                      ? currentIndexAbs.toDouble()
-                                      : currentIndexAbsDelayed.toDouble()) +
-                              tileHeight),
-                      duration: const Duration(milliseconds: 300),
-                      curve: const Cubic(0, 0, 0, 1),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 0),
+          SizedBox(
+            width: 180,
+            child: Stack(
+              children: [
+                Container(
+                  color: Colors.white12,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 30),
+                  child: Stack(
+                    children: [
+                      AnimatedPositioned(
+                        left: 0,
+                        right: 0,
+                        top: tileHeight *
+                            (getTabDirection()
+                                ? currentIndexAbsDelayed.toDouble()
+                                : currentIndexAbs.toDouble()),
+                        bottom: sidebarHeight -
+                            (tileHeight *
+                                    (getTabDirection()
+                                        ? currentIndexAbs.toDouble()
+                                        : currentIndexAbsDelayed.toDouble()) +
+                                tileHeight + (currentIndexAbs * 5)),
+                        duration: const Duration(milliseconds: 300),
+                        curve: const Cubic(0, 0, 0, 1),
                         child: Center(
                           child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(60),
-                              color: Color.fromARGB(255, 15, 121, 85),
-                            ),
-                          ),
+                              height: tileHeight,
+                              width: 200,
+                              color: Colors.white.withOpacity(0.3)),
                         ),
                       ),
-                    ),
-                    Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: tiles,
-                      ),
-                    ),
-                  ],
-                ),
-              )),
-          Container(
-            height: sidebarHeight,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: List.generate(widget.items.length, (index) {
-                return GestureDetector(
-                  onTapDown: (details) {
-                    if (currentTab != index) {
-                      setState(() {
-                        currentTab = index;
-                      });
-                    }
-                    setDelayedIndex();
-                    currentIndexAbs = index;
-                    HapticFeedback.selectionClick();
-                  },
-                  child: Container(
-                    height: tileHeight,
-                    color: Colors.transparent,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 18),
-                      child: Center(
-                        child: AnimatedOpacity(
-                          duration: Duration(milliseconds: 200),
-                          curve: Curves.easeInOut,
-                          opacity: index == currentTab ? 1 : 0.35,
-                          child: Text(
-                            widget.items[index].title ?? "",
-                            style: const TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
+                      Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: tiles,
                         ),
-                      ),
-                    ),
+                      )
+                    ],
                   ),
-                );
-              }),
+                ),
+              ],
             ),
-          )
+          ),
         ],
       ),
     );
   }
 
-  List<_SidebarTile> createTiles(double height) {
-    List<_SidebarTile> tabTiles = <_SidebarTile>[];
+  List<Widget> createTiles(double height) {
+    List<Widget> tabTiles = [];
     int currIndex = 0;
     List<int> indexes = <int>[];
     List<int> indexesAbs = <int>[];
@@ -170,20 +125,23 @@ class _SideBarState extends ConsumerState<SideBar>
       indexes.add(currIndex);
       switch (item.runtimeType) {
         case SidebarTabItem:
-          _SidebarTabTile tile = _SidebarTabTile(
-            icon: item.icon,
-            height: height,
-            callback: () {
-              if (widget.currentIndex == null || widget.onTap == null) return;
-              if (indexes[i] != widget.currentIndex) {
-                widget.onTap!.call(indexes[i]);
-                setDelayedIndex();
-                currentIndexAbs = indexesAbs[i];
-                HapticFeedback.selectionClick();
-              }
-            },
-            title: (item as SidebarTabItem).title,
-            child: (item as SidebarTabItem).child,
+          final tile = Padding(
+            padding: const EdgeInsets.only(top: 5.0, left: 5),
+            child: _SidebarTabTile(
+              icon: item.icon,
+              height: height,
+              callback: () {
+                if (widget.currentIndex == null || widget.onTap == null) return;
+                if (indexes[i] != widget.currentIndex) {
+                  widget.onTap!.call(indexes[i]);
+                  setDelayedIndex();
+                  currentIndexAbs = indexesAbs[i];
+                  HapticFeedback.selectionClick();
+                }
+              },
+              title: (item as SidebarTabItem).title,
+              child: (item).child,
+            ),
           );
           tabTiles.add(tile);
           currIndex++;
@@ -238,12 +196,30 @@ class _SidebarTabTile extends _SidebarTile {
       },
       child: Container(
         height: height,
-        width: sidebarWidth,
+        width: 200,
         color: Colors.transparent,
-        child: child ??
-            Icon(
-              icon,
-            ),
+        child: Row(
+          children: [
+            child ??
+                Icon(
+                  color:  const Color.fromARGB(255, 8, 46, 10),
+                  icon,
+                ),
+            Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: Center(
+                child: Text(
+                  title ?? "",
+                  style: const TextStyle(
+                    fontSize: 15,
+                    color:  Color.fromARGB(255, 8, 46, 10),
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -269,16 +245,20 @@ class _SidebarFunctionTile extends _SidebarTile {
       child: Container(
         color: Colors.transparent,
         height: height,
-        width: sidebarWidth,
-        child: Icon(
-          icon,
-          shadows: const [
-            Shadow(
-              color: Colors.amber,
-              blurRadius: 150,
-            )
+        width: 30,
+        child: Row(
+          children: [
+            Icon(
+              icon,
+              shadows: const [
+                Shadow(
+                  color: Colors.amber,
+                  blurRadius: 150,
+                )
+              ],
+              color: backgroundColor,
+            ),
           ],
-          color: backgroundColor,
         ),
       ),
     );

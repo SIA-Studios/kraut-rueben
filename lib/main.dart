@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kraut_rueben/backend/database.dart';
 import 'package:kraut_rueben/sidemenu.dart';
 
 void main() {
@@ -14,6 +15,8 @@ void main() {
     win.title = "Custom window with Flutter";
     win.show();
   });
+
+  DatabaseManager.connectToDatabase("finn", "ZUeiTvxqUc8(A3T/");
 }
 
 const borderColor = Color.fromARGB(255, 0, 56, 49);
