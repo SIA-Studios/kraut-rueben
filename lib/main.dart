@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kraut_rueben/backend/database.dart';
+import 'package:kraut_rueben/home.dart';
 import 'package:kraut_rueben/sidemenu.dart';
 
 void main() {
@@ -22,6 +23,8 @@ void main() {
 const borderColor = Color.fromARGB(255, 0, 56, 49);
 
 class MyApp extends StatelessWidget {
+  static ValueNotifier<int> currentTab = ValueNotifier<int>(0);
+
   const MyApp({Key? key}) : super(key: key);
 
   @override
@@ -50,16 +53,25 @@ class LeftSide extends StatelessWidget {
   const LeftSide({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [backgroundStartColor, backgroundEndColor],
-              stops: [0.0, 1.0]),
-        ),
-        child: Stack(
-          children: [WindowTitleBarBox(child: MoveWindow()), SideMenu()],
+    return SizedBox(
+        width: 200,
+        child: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [backgroundStartColor, backgroundEndColor],
+                stops: [0.0, 1.0]),
+          ),
+          child: Container(
+            color: Colors.white.withOpacity(0.15),
+            child: Column(
+              children: [
+                WindowTitleBarBox(child: MoveWindow()),
+                Expanded(child: SideMenu()),
+              ],
+            ),
+          ),
         ));
   }
 }
@@ -85,7 +97,8 @@ class RightSide extends StatelessWidget {
             child: Row(
               children: [Expanded(child: MoveWindow()), const WindowButtons()],
             ),
-          )
+          ),
+          Expanded(child: HomePage())
         ]),
       ),
     );

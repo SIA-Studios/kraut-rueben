@@ -5,6 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:bitsdojo_window_platform_interface/bitsdojo_window_platform_interface.dart';
 import 'package:kraut_rueben/sidemenu.dart';
 
+import '../main.dart';
+
 class SideBar extends ConsumerStatefulWidget {
   final List<SidebarItem> items;
   final ValueChanged<int>? onTap;
@@ -51,66 +53,56 @@ class _SideBarState extends ConsumerState<SideBar>
 
   @override
   Widget build(BuildContext context) {
-    double padding = 20;
+    double tileHeight = 40;
     double sidebarHeight = MediaQuery.of(context).size.height -
-        MediaQuery.of(context).viewInsets.top -
-        padding * 2 -
+        BitsdojoWindowPlatform.instance.appWindow.titleBarHeight -
         3;
-    double tileHeight = 30;
     var tiles = createTiles(tileHeight);
 
-    return Padding(
-      padding: const EdgeInsets.only(right: 10),
-      child: Row(
-        children: [
-          SizedBox(
-            width: 180,
-            child: Stack(
+    return Row(
+      children: [
+        Stack(
+          children: [
+            Stack(
               children: [
-                Container(
-                  color: Colors.white12,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 30),
-                  child: Stack(
-                    children: [
-                      AnimatedPositioned(
-                        left: 0,
-                        right: 0,
-                        top: tileHeight *
-                            (getTabDirection()
-                                ? currentIndexAbsDelayed.toDouble()
-                                : currentIndexAbs.toDouble()),
-                        bottom: sidebarHeight -
-                            (tileHeight *
-                                    (getTabDirection()
-                                        ? currentIndexAbs.toDouble()
-                                        : currentIndexAbsDelayed.toDouble()) +
-                                tileHeight + (currentIndexAbs * 5)),
-                        duration: const Duration(milliseconds: 300),
-                        curve: const Cubic(0, 0, 0, 1),
-                        child: Center(
-                          child: Container(
-                              height: tileHeight,
-                              width: 200,
-                              color: Colors.white.withOpacity(0.3)),
-                        ),
-                      ),
-                      Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: tiles,
-                        ),
-                      )
-                    ],
+                AnimatedPositioned(
+                  left: 0,
+                  right: 0,
+                  top: tileHeight *
+                      (getTabDirection()
+                          ? currentIndexAbsDelayed.toDouble()
+                          : currentIndexAbs.toDouble()),
+                  bottom: sidebarHeight -
+                      (tileHeight *
+                              (getTabDirection()
+                                  ? currentIndexAbs.toDouble()
+                                  : currentIndexAbsDelayed.toDouble()) +
+                          tileHeight),
+                  duration: const Duration(milliseconds: 300),
+                  curve: const Cubic(0, 0, 0, 1),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Center(
+                      child: Container(
+                          decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.circular(tileHeight / 2),
+                              color: Colors.white54)),
+                    ),
                   ),
                 ),
+                Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: tiles,
+                  ),
+                )
               ],
             ),
-          ),
-        ],
-      ),
+          ],
+        ),
+      ],
     );
   }
 
@@ -125,29 +117,28 @@ class _SideBarState extends ConsumerState<SideBar>
       indexes.add(currIndex);
       switch (item.runtimeType) {
         case SidebarTabItem:
-          final tile = Padding(
-            padding: const EdgeInsets.only(top: 5.0, left: 5),
-            child: _SidebarTabTile(
-              icon: item.icon,
-              height: height,
-              callback: () {
-                if (widget.currentIndex == null || widget.onTap == null) return;
-                if (indexes[i] != widget.currentIndex) {
-                  widget.onTap!.call(indexes[i]);
-                  setDelayedIndex();
-                  currentIndexAbs = indexesAbs[i];
-                  HapticFeedback.selectionClick();
-                }
-              },
-              title: (item as SidebarTabItem).title,
-              child: (item).child,
-            ),
+          final tile = _SidebarTabTile(
+            index: i,
+            icon: item.icon,
+            height: height,
+            callback: () {
+              if (widget.currentIndex == null || widget.onTap == null) return;
+              if (indexes[i] != widget.currentIndex) {
+                widget.onTap!.call(indexes[i]);
+                setDelayedIndex();
+                currentIndexAbs = indexesAbs[i];
+                HapticFeedback.selectionClick();
+              }
+            },
+            title: (item as SidebarTabItem).title,
+            child: (item).child,
           );
           tabTiles.add(tile);
           currIndex++;
           break;
         case SidebarFunctionItem:
           _SidebarFunctionTile tile = _SidebarFunctionTile(
+            index: i,
             backgroundColor: (item as SidebarFunctionItem).iconColor!,
             function: item.function,
             icon: item.icon,
@@ -163,6 +154,7 @@ class _SideBarState extends ConsumerState<SideBar>
 }
 
 abstract class _SidebarTile extends ConsumerWidget {
+  final int index;
   final IconData icon;
   final double height;
   Color? selectedColor;
@@ -170,6 +162,7 @@ abstract class _SidebarTile extends ConsumerWidget {
 
   _SidebarTile({
     super.key,
+    required this.index,
     required this.icon,
     required this.height,
     this.selectedColor,
@@ -184,6 +177,7 @@ class _SidebarTabTile extends _SidebarTile {
   _SidebarTabTile(
       {required super.icon,
       required super.height,
+      required super.index,
       required this.callback,
       this.title,
       this.child});
@@ -194,31 +188,39 @@ class _SidebarTabTile extends _SidebarTile {
       onTapDown: (details) {
         callback.call();
       },
-      child: Container(
-        height: height,
-        width: 200,
-        color: Colors.transparent,
-        child: Row(
-          children: [
-            child ??
-                Icon(
-                  color:  const Color.fromARGB(255, 8, 46, 10),
-                  icon,
-                ),
-            Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: Center(
-                child: Text(
-                  title ?? "",
-                  style: const TextStyle(
-                    fontSize: 15,
-                    color:  Color.fromARGB(255, 8, 46, 10),
-                    fontWeight: FontWeight.w600,
+      child: AnimatedOpacity(
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeInOut,
+        opacity: index == MyApp.currentTab.value ? 1 : 0.65,
+        child: Container(
+          height: height,
+          width: 200,
+          color: Colors.transparent,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 20.0),
+            child: Row(
+              children: [
+                child ??
+                    Icon(
+                      color: const Color.fromARGB(255, 8, 46, 10),
+                      icon,
+                    ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 20),
+                  child: Center(
+                    child: Text(
+                      title ?? "",
+                      style: const TextStyle(
+                        fontSize: 15,
+                        color: Color.fromARGB(255, 8, 46, 10),
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            )
-          ],
+                )
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -232,6 +234,7 @@ class _SidebarFunctionTile extends _SidebarTile {
   _SidebarFunctionTile(
       {required super.icon,
       required super.height,
+      required super.index,
       required this.function,
       this.title,
       required this.backgroundColor});
@@ -252,7 +255,7 @@ class _SidebarFunctionTile extends _SidebarTile {
               icon,
               shadows: const [
                 Shadow(
-                  color: Colors.amber,
+                  color: Colors.green,
                   blurRadius: 150,
                 )
               ],

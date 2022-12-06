@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kraut_rueben/main.dart';
 import 'package:kraut_rueben/widgets/sidebar.dart';
 
 class SideMenu extends StatefulWidget {
@@ -6,17 +7,15 @@ class SideMenu extends StatefulWidget {
   State<SideMenu> createState() => _SideMenuState();
 }
 
-int currentTab = 0;
-
 class _SideMenuState extends State<SideMenu> {
   @override
   Widget build(BuildContext context) {
     return SideBar(
-      currentIndex: currentTab,
+      currentIndex: MyApp.currentTab.value,
       onTap: (index) {
-        if (currentTab != index) {
+        if (MyApp.currentTab.value != index) {
           setState(() {
-            currentTab = index;
+            MyApp.currentTab.value = index;
           });
         }
       },

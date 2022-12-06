@@ -39,6 +39,7 @@ dependencies:
   bitsdojo_window: ^0.1.5
   flutter_riverpod: ^2.1.1
   mysql1: ^0.20.0
+  dyn_mouse_scroll: ^1.0.7
 
 dev_dependencies:
   flutter_test:
