@@ -16,7 +16,7 @@ void main() {
   });
 }
 
-const borderColor = Color(0xFF805306);
+const borderColor = Colors.white;
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
