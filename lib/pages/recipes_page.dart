@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kraut_rueben/pages/page.dart';
 
-class OrdersPage extends ContentPage {
-  const OrdersPage({super.key});
+class RecipesPage extends ContentPage {
+  const RecipesPage({super.key});
 
   @override
-  ConsumerState<ContentPage> createState() => _OrdersPageState();
+  ConsumerState<ContentPage> createState() => _RecipesPageState();
 }
 
-class _OrdersPageState extends ContentPageState {
+class _RecipesPageState extends ContentPageState {
   @override
-  String? get title => "Orders";
+  String? get title => "Recipes";
 
   @override
   Widget? get content => const Text(

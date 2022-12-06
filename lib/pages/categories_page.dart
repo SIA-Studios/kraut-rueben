@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kraut_rueben/pages/page.dart';
 
-class AnalyticsPage extends ContentPage {
-  const AnalyticsPage({super.key});
+class CategoriesPage extends ContentPage {
+  const CategoriesPage({super.key});
 
   @override
-  ConsumerState<ContentPage> createState() => _AnalyticsPageState();
+  ConsumerState<ContentPage> createState() => _CategoriesPageState();
 }
 
-class _AnalyticsPageState extends ContentPageState {
+class _CategoriesPageState extends ContentPageState {
   @override
-  String? get title => "Analytics";
+  String? get title => "Categories";
 
   @override
   Widget? get content => const Text(

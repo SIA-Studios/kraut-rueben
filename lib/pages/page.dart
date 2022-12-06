@@ -16,15 +16,15 @@ abstract class ContentPageState extends ConsumerState<ContentPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (title != null)
-        IgnorePointer(
-          child: Text(
-            title!,
-            style: const TextStyle(
-                color: Color.fromARGB(255, 8, 46, 10),
-                fontWeight: FontWeight.w700,
-                fontSize: 30),
+          IgnorePointer(
+            child: Text(
+              title!,
+              style: const TextStyle(
+                  color: Color.fromARGB(255, 8, 46, 10),
+                  fontWeight: FontWeight.w700,
+                  fontSize: 30),
+            ),
           ),
-        ),
         const SizedBox(
           height: 20,
         ),
@@ -34,11 +34,12 @@ abstract class ContentPageState extends ConsumerState<ContentPage> {
             child: Container(
               color: Colors.white.withOpacity(0.15),
               child: DynMouseScroll(
-                  builder: (context, controller, physics) => ListView(
-                      padding: EdgeInsets.all(30),
-                      physics: physics,
-                      controller: controller,
-                      children: [if (content != null) content!])),
+                  builder: (context, controller, physics) =>
+                      SingleChildScrollView(
+                          padding: EdgeInsets.all(30),
+                          physics: physics,
+                          controller: controller,
+                          child: content != null ? content! : null)),
             ),
           ),
         ),

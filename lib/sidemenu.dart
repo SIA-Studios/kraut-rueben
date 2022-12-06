@@ -20,10 +20,10 @@ class _SideMenuState extends State<SideMenu> {
         }
       },
       items: [
-        SidebarTabItem(icon: Icons.show_chart, title: "Analytics"),
-        SidebarTabItem(icon: Icons.account_tree_outlined, title: "Database"),
-        SidebarTabItem(icon: Icons.history, title: "History"),
-        SidebarTabItem(icon: Icons.shopping_cart_outlined, title: "Orders"),
+        SidebarTabItem(icon: Icons.folder_open_outlined, title: "Database"),
+        SidebarTabItem(icon: Icons.category_outlined, title: "Categories"),
+        SidebarTabItem(icon: Icons.description_outlined, title: "Recipes"),
+        SidebarTabItem(icon: Icons.water_drop_outlined, title: "Ingredients"),
       ],
     );
   }

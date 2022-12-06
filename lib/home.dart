@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:kraut_rueben/pages/analytics_page.dart';
+import 'package:kraut_rueben/pages/categories_page.dart';
 import 'package:kraut_rueben/pages/database_page.dart';
-import 'package:kraut_rueben/pages/history_page.dart';
-import 'package:kraut_rueben/pages/orders_page.dart';
+import 'package:kraut_rueben/pages/ingredients_page.dart';
+import 'package:kraut_rueben/pages/recipes_page.dart';
 
 import 'main.dart';
 
@@ -25,10 +25,10 @@ class HomePageState extends State<HomePage> {
               alignment: Alignment.center,
               index: value,
               children: const [
-                AnalyticsPage(),
                 DatabasePage(),
-                HistoryPage(),
-                OrdersPage()
+                CategoriesPage(),
+                RecipesPage(),
+                IngredientsPage(),
               ],
             );
           }),
