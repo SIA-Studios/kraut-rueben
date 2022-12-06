@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
-import 'package:kraut_rueben/home.dart';
-import 'package:kraut_rueben/sidebar.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kraut_rueben/sidemenu.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
   doWhenWindowReady(() {
     final win = appWindow;
     const initialSize = Size(1000, 650);
@@ -16,7 +16,7 @@ void main() {
   });
 }
 
-const borderColor = Colors.white;
+const borderColor = Color.fromARGB(255, 0, 56, 49);
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -47,25 +47,17 @@ class LeftSide extends StatelessWidget {
   const LeftSide({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-        width: 200,
-        child: Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [backgroundStartColor, backgroundEndColor],
-                  stops: [0.0, 1.0]),
-            ),
-            child: Container(
-              color: Colors.white.withOpacity(0.15),
-              child: Column(
-                children: [
-                  WindowTitleBarBox(child: MoveWindow()),
-                  Expanded(child: SideBar())
-                ],
-              ),
-            )));
+    return Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [backgroundStartColor, backgroundEndColor],
+              stops: [0.0, 1.0]),
+        ),
+        child: Stack(
+          children: [WindowTitleBarBox(child: MoveWindow()), SideMenu()],
+        ));
   }
 }
 
