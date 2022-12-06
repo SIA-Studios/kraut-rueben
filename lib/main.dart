@@ -91,13 +91,13 @@ class RightSide extends StatelessWidget {
               colors: [backgroundStartColor, backgroundEndColor],
               stops: [0.0, 1.0]),
         ),
-        child: Column(children: [
+        child: Stack(children: [
           WindowTitleBarBox(
             child: Row(
               children: [Expanded(child: MoveWindow()), const WindowButtons()],
             ),
           ),
-          Expanded(child: HomePage())
+          const Expanded(child: HomePage())
         ]),
       ),
     );

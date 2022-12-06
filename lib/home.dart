@@ -17,27 +17,21 @@ class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(15),
-        child: Container(
-          color: Colors.white.withOpacity(0.15),
-          child: ValueListenableBuilder(
-              valueListenable: MyApp.currentTab,
-              builder: (context, value, child) {
-                return IndexedStack(
-                  alignment: Alignment.center,
-                  index: value,
-                  children: [
-                    DatabasePage(),
-                    AnalyticsPage(),
-                    HistoryPage(),
-                    OrdersPage()
-                  ],
-                );
-              }),
-        ),
-      ),
+      padding: const EdgeInsets.all(30.0),
+      child: ValueListenableBuilder(
+          valueListenable: MyApp.currentTab,
+          builder: (context, value, child) {
+            return IndexedStack(
+              alignment: Alignment.center,
+              index: value,
+              children: const [
+                AnalyticsPage(),
+                DatabasePage(),
+                HistoryPage(),
+                OrdersPage()
+              ],
+            );
+          }),
     );
   }
 }
