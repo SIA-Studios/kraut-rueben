@@ -1,5 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kraut_rueben/backend/database.dart';
+import 'package:kraut_rueben/models/customer.dart';
 import 'package:kraut_rueben/pages/page.dart';
 
 class DatabasePage extends ContentPage {
@@ -10,6 +14,37 @@ class DatabasePage extends ContentPage {
 }
 
 class _DatabasePageState extends ContentPageState {
+  final List<DataRow> rows = [];
+
+  Future<void> _loadCustomers() async {
+     final customers = await DatabaseManager.getCustomers();
+
+    setState(() {
+        for (final customer in customers) {
+              rows.add(DataRow(cells: [
+                DataCell(Text(customer.customerId.toString())),
+                DataCell(Text(customer.surname)),
+                DataCell(Text(customer.name)),
+                DataCell(Text(customer.birthday.toIso8601String())),
+                DataCell(Text(customer.street)),
+                DataCell(Text(customer.streetNumber)),
+                DataCell(Text(customer.postcode)),
+                DataCell(Text(customer.location)),
+                DataCell(Text(customer.phone)),
+                DataCell(Text(customer.email)),
+              ]));
+            }
+      });
+  }  
+
+  @override
+  void initState() {
+    super.initState();
+    Timer(const Duration(seconds: 3), () async {
+      await _loadCustomers();
+    });
+  }
+
   @override
   String? get title => "Database";
 
@@ -20,34 +55,18 @@ class _DatabasePageState extends ContentPageState {
           scrollDirection: Axis.horizontal,
           child: DataTable(
             columns: const [
-              DataColumn(label: Text("title")),
-              DataColumn(label: Text("id")),
-              DataColumn(label: Text("ingredients")),
-              DataColumn(label: Text("price")),
-              DataColumn(label: Text("info")),
-              DataColumn(label: Text("category")),
-              DataColumn(label: Text("allergens")),
+              DataColumn(label: Text("KundenNr")),
+              DataColumn(label: Text("Nachname")),
+              DataColumn(label: Text("Vorname")),
+              DataColumn(label: Text("Geburtsdatum")),
+              DataColumn(label: Text("Strasse")),
+              DataColumn(label: Text("Hausnummer")),
+              DataColumn(label: Text("Postleitzahl")),
+              DataColumn(label: Text("Ort")),
+              DataColumn(label: Text("Telefon")),
+              DataColumn(label: Text("Email")),
             ],
-            rows: const [
-              DataRow(cells: [
-                DataCell(Text("test1")),
-                DataCell(Text("2354752895723895")),
-                DataCell(Text("Milk, Eggs, Pork, Whatever")),
-                DataCell(Text("10.99")),
-                DataCell(Text("A very delicious recipe for a sunday evening")),
-                DataCell(Text("Dinner")),
-                DataCell(Text("Lactose, Eggs, Meat")),
-              ]),
-              DataRow(cells: [
-                DataCell(Text("test2")),
-                DataCell(Text("2375627523")),
-                DataCell(Text("Cream, Eggs, Strawberries, Whatever")),
-                DataCell(Text("5.99")),
-                DataCell(Text("The perfect dessert for every occasion")),
-                DataCell(Text("Dessert")),
-                DataCell(Text("Lactose, Eggs, fructose")),
-              ])
-            ],
+            rows: rows,
           ),
         ),
       );
