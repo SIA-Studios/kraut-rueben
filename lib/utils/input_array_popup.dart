@@ -26,6 +26,8 @@ class InputArrayPopup extends StatefulWidget {
 class _InputArrayPopupState extends State<InputArrayPopup> {
   final GlobalKey<FormState> _formKey = GlobalKey();
   List<InputArrayFormField> textFields = [];
+  TextEditingController addItemController = TextEditingController();
+  ScrollController scrollController = ScrollController();
 
   @override
   void initState() {
@@ -38,9 +40,9 @@ class _InputArrayPopupState extends State<InputArrayPopup> {
         index: index,
         inputFormatters: widget.inputFormatters,
         validator: widget.validator,
-        onRemove: (() {
+        onRemove: ((i) {
           setState(() {
-            textFields.removeWhere((element) => element.index == index);
+            textFields.removeWhere((element) => element.index == i);
           });
         }),
       ));
@@ -79,29 +81,154 @@ class _InputArrayPopupState extends State<InputArrayPopup> {
                           children: [
                             Container(
                                 width: width,
-                                padding: const EdgeInsets.all(15),
                                 child: Column(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    Text(
-                                      widget.title,
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          color: Colors.black.withOpacity(0.8),
-                                          fontWeight: FontWeight.w600,
-                                          fontStyle: FontStyle.italic,
-                                          fontSize: 20),
+                                    Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          15, 15, 15, 0),
+                                      child: Text(
+                                        widget.title,
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            color:
+                                                Colors.black.withOpacity(0.8),
+                                            fontWeight: FontWeight.w600,
+                                            fontStyle: FontStyle.italic,
+                                            fontSize: 20),
+                                      ),
                                     ),
                                     const SizedBox(
                                       height: 10,
                                     ),
-                                    Container(
-                                      constraints:
-                                          const BoxConstraints(maxHeight: 250),
-                                      child: SingleChildScrollView(
-                                        child: Column(
-                                          children: textFields,
-                                        ),
+                                    Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          15, 0, 0, 15),
+                                      child: Column(
+                                        children: [
+                                          Container(
+                                            constraints: const BoxConstraints(
+                                                maxHeight: 260),
+                                            child: SingleChildScrollView(
+                                              controller: scrollController,
+                                              child: Column(
+                                                children: textFields,
+                                              ),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 5),
+                                            child: Row(
+                                              children: [
+                                                Expanded(
+                                                  child: TextFormField(
+                                                    validator: widget.validator,
+                                                    inputFormatters:
+                                                        widget.inputFormatters,
+                                                    maxLines: 1,
+                                                    textAlignVertical:
+                                                        TextAlignVertical
+                                                            .center,
+                                                    controller:
+                                                        addItemController,
+                                                    textAlign: TextAlign.left,
+                                                    onChanged: (value) =>
+                                                        _formKey.currentState!
+                                                            .validate(),
+                                                    decoration: InputDecoration(
+                                                      filled: true,
+                                                      fillColor: Colors.white
+                                                          .withOpacity(0.3),
+                                                      border:
+                                                          OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(15),
+                                                        borderSide:
+                                                            const BorderSide(
+                                                          width: 0,
+                                                          style:
+                                                              BorderStyle.none,
+                                                        ),
+                                                      ),
+                                                      isDense: true,
+                                                      contentPadding:
+                                                          const EdgeInsets
+                                                                  .symmetric(
+                                                              horizontal: 12,
+                                                              vertical: 7),
+                                                    ),
+                                                    style: TextStyle(
+                                                      color: Colors.black
+                                                          .withOpacity(0.8),
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      fontSize: 16,
+                                                    ),
+                                                  ),
+                                                ),
+                                                const SizedBox(
+                                                  width: 7,
+                                                ),
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      textFields.add(
+                                                          InputArrayFormField(
+                                                        controller:
+                                                            TextEditingController(
+                                                                text:
+                                                                    addItemController
+                                                                        .value
+                                                                        .text),
+                                                        index:
+                                                            textFields.length,
+                                                        validator:
+                                                            widget.validator,
+                                                        inputFormatters: widget
+                                                            .inputFormatters,
+                                                        formKey: _formKey,
+                                                        onRemove: ((index) {
+                                                          setState(() {
+                                                            textFields.removeWhere(
+                                                                (element) =>
+                                                                    element
+                                                                        .index ==
+                                                                    index);
+                                                          });
+                                                        }),
+                                                      ));
+                                                      addItemController.clear();
+                                                    });
+                                                    scrollController.animateTo(
+                                                      scrollController.position
+                                                              .maxScrollExtent +
+                                                          50,
+                                                      curve: Curves.easeOut,
+                                                      duration: const Duration(
+                                                          milliseconds: 250),
+                                                    );
+                                                  },
+                                                  child: CircleAvatar(
+                                                    radius: 8,
+                                                    backgroundColor: Colors
+                                                        .white
+                                                        .withOpacity(0.4),
+                                                    child: const Icon(
+                                                      Icons.add,
+                                                      color: Colors.black,
+                                                      size: 14,
+                                                    ),
+                                                  ),
+                                                ),
+                                                const SizedBox(
+                                                  width: 15,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     )
                                   ],
@@ -182,7 +309,7 @@ class InputArrayFormField extends StatelessWidget {
   final String? Function(String?)? validator;
   final List<TextInputFormatter>? inputFormatters;
   final GlobalKey<FormState> formKey;
-  final void Function() onRemove;
+  final void Function(int) onRemove;
 
   const InputArrayFormField({
     required this.controller,
@@ -233,7 +360,7 @@ class InputArrayFormField extends StatelessWidget {
             width: 7,
           ),
           GestureDetector(
-            onTap: () => onRemove.call(),
+            onTap: () => onRemove.call(index),
             child: CircleAvatar(
               radius: 8,
               backgroundColor: Colors.white.withOpacity(0.4),
@@ -243,7 +370,10 @@ class InputArrayFormField extends StatelessWidget {
                 size: 14,
               ),
             ),
-          )
+          ),
+          const SizedBox(
+            width: 15,
+          ),
         ],
       ),
     );
