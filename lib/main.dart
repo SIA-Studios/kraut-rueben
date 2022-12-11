@@ -5,7 +5,7 @@ import 'package:kraut_rueben/backend/database.dart';
 import 'package:kraut_rueben/home.dart';
 import 'package:kraut_rueben/sidemenu.dart';
 
-void main() {
+void main() async {
   runApp(const ProviderScope(child: MyApp()));
   doWhenWindowReady(() {
     final win = appWindow;
@@ -16,7 +16,9 @@ void main() {
     win.show();
   });
 
-  DatabaseManager.connectToDatabase("finn", "ZUeiTvxqUc8(A3T/");
+  final status =
+      await DatabaseManager.connectToDatabase("finn", "ZUeiTvxqUc8(A3T/");
+  print(status);
 }
 
 const borderColor = Color.fromARGB(255, 0, 56, 49);
