@@ -39,7 +39,7 @@ abstract class ContentPageState extends ConsumerState<ContentPage> {
                           padding: EdgeInsets.all(30),
                           physics: physics,
                           controller: controller,
-                          child: content != null ? content! : null)),
+                          child: SizedBox(width: double.infinity, child: content))),
             ),
           ),
         ),
