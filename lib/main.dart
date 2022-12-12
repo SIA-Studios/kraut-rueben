@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kraut_rueben/backend/database.dart';
 import 'package:kraut_rueben/home.dart';
 import 'package:kraut_rueben/sidemenu.dart';
+import 'package:kraut_rueben/utils/transitions.dart';
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
-  runApp(const ProviderScope(child: MyApp()));
+  runApp(ProviderScope(child: MyApp()));
   doWhenWindowReady(() {
     final win = appWindow;
     const initialSize = Size(1000, 650);
@@ -14,11 +16,8 @@ void main() async {
     win.size = initialSize;
     win.alignment = Alignment.center;
     win.show();
+    showLoginPopup();
   });
-
-  final status =
-      await DatabaseManager.connectToDatabase("finn", "ZUeiTvxqUc8(A3T/");
-  print(status);
 }
 
 const borderColor = Color.fromARGB(255, 0, 56, 49);
@@ -26,11 +25,12 @@ const borderColor = Color.fromARGB(255, 0, 56, 49);
 class MyApp extends StatelessWidget {
   static ValueNotifier<int> currentTab = ValueNotifier<int>(0);
 
-  const MyApp({Key? key}) : super(key: key);
+  MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: navigatorKey,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         fontFamily: "montserrat",

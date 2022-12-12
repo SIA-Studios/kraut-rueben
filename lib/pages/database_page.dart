@@ -1,8 +1,6 @@
 import 'package:dropdown_button2/custom_dropdown_button2.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kraut_rueben/home.dart';
 import 'package:kraut_rueben/pages/page.dart';
 import 'package:kraut_rueben/utils/transitions.dart';
 
@@ -34,7 +32,7 @@ class _DatabasePageState extends ContentPageState {
   Widget? get content => DataTable(
         columns: [
           DataColumn(label: GestureDetector(
-            onTap: () => showInputArrayPopup(title: "test", initialValue: ["test1", "test2", "test3", "test4"], context: context),
+            onTap: () => showLoginPopup(),
             child: Text("title")
             )),
           DataColumn(
