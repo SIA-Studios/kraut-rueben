@@ -179,29 +179,29 @@ INSERT INTO BESTELLUNGZUTAT(BESTELLNR, ZUTATENNR, MENGE) VALUES (12, 1010, 15);
 /******************************************************************************/
 
 
-INSERT INTO KATEGORIE(KATEGORIENR, NAME) VALUES (1,'Vegan')
+INSERT INTO KATEGORIE(KATEGORIENR, NAME) VALUES (1,'Vegan');
 
-INSERT INTO KATEGORIE(KATEGORIENR, NAME) VALUES (2,'Vegetarisch')
+INSERT INTO KATEGORIE(KATEGORIENR, NAME) VALUES (2,'Vegetarisch');
 
-INSERT INTO KATEGORIE(KATEGORIENR, NAME) VALUES (3,'Frühstück')
+INSERT INTO KATEGORIE(KATEGORIENR, NAME) VALUES (3,'Frühstück');
 
-INSERT INTO KATEGORIE(KATEGORIENR, NAME) VALUES (4,'Hauptspeise')
+INSERT INTO KATEGORIE(KATEGORIENR, NAME) VALUES (4,'Hauptspeise');
 
-INSERT INTO KATEGORIE(KATEGORIENR, NAME) VALUES (5,'Dessert')
+INSERT INTO KATEGORIE(KATEGORIENR, NAME) VALUES (5,'Dessert');
 
-INSERT INTO KATEGORIE(KATEGORIENR, NAME) VALUES (6,'Beilage')textstyle
+INSERT INTO KATEGORIE(KATEGORIENR, NAME) VALUES (6,'Beilage');
 
-INSERT INTO KATEGORIE(KATEGORIENR, NAME) VALUES (7,'Salat')
+INSERT INTO KATEGORIE(KATEGORIENR, NAME) VALUES (7,'Salat');
 
-INSERT INTO KATEGORIE(KATEGORIENR, NAME) VALUES (8,'Suppen')
+INSERT INTO KATEGORIE(KATEGORIENR, NAME) VALUES (8,'Suppen');
 
-INSERT INTO KATEGORIE(KATEGORIENR, NAME) VALUES (9,'Vorspeisen')
+INSERT INTO KATEGORIE(KATEGORIENR, NAME) VALUES (9,'Vorspeisen');
 
-INSERT INTO KATEGORIE(KATEGORIENR, NAME) VALUES (10,'Fleisch')
+INSERT INTO KATEGORIE(KATEGORIENR, NAME) VALUES (10,'Fleisch');
 
-INSERT INTO KATEGORIE(KATEGORIENR, NAME) VALUES (11,'Kartoffeln')
+INSERT INTO KATEGORIE(KATEGORIENR, NAME) VALUES (11,'Kartoffeln');
 
-INSERT INTO KATEGORIE(KATEGORIENR, NAME) VALUES (12,'Pilze')
+INSERT INTO KATEGORIE(KATEGORIENR, NAME) VALUES (12,'Pilze');
 
 
 /******************************************************************************/
@@ -209,21 +209,21 @@ INSERT INTO KATEGORIE(KATEGORIENR, NAME) VALUES (12,'Pilze')
 /******************************************************************************/
 
 
-INSERT INTO UNVERTRAEGLICHKEIT(UNVERNR, NAME) VALUES (1,'Fructoseintoleranz')
+INSERT INTO UNVERTRAEGLICHKEIT(UNVERNR, NAME) VALUES (1,'Fructoseintoleranz');
 
-INSERT INTO UNVERTRAEGLICHKEIT(UNVERNR, NAME) VALUES (2,'Glutenintoleranz')
+INSERT INTO UNVERTRAEGLICHKEIT(UNVERNR, NAME) VALUES (2,'Glutenintoleranz');
 
-INSERT INTO UNVERTRAEGLICHKEIT(UNVERNR, NAME) VALUES (3,'Histaminintoleranz')
+INSERT INTO UNVERTRAEGLICHKEIT(UNVERNR, NAME) VALUES (3,'Histaminintoleranz');
 
-INSERT INTO UNVERTRAEGLICHKEIT(UNVERNR, NAME) VALUES (4,'Laktoseintoleranz')
+INSERT INTO UNVERTRAEGLICHKEIT(UNVERNR, NAME) VALUES (4,'Laktoseintoleranz');
 
-INSERT INTO UNVERTRAEGLICHKEIT(UNVERNR, NAME) VALUES (5,'Saccharoseintoleranz')
+INSERT INTO UNVERTRAEGLICHKEIT(UNVERNR, NAME) VALUES (5,'Saccharoseintoleranz');
 
-INSERT INTO UNVERTRAEGLICHKEIT(UNVERNR, NAME) VALUES (6,'Sorbitintoleranz')
+INSERT INTO UNVERTRAEGLICHKEIT(UNVERNR, NAME) VALUES (6,'Sorbitintoleranz');
 
-INSERT INTO UNVERTRAEGLICHKEIT(UNVERNR, NAME) VALUES (7,'Weizenintoleranz')
+INSERT INTO UNVERTRAEGLICHKEIT(UNVERNR, NAME) VALUES (7,'Weizenintoleranz');
 
-INSERT INTO UNVERTRAEGLICHKEIT(UNVERNR, NAME) VALUES (8,'Nussallergie')
+INSERT INTO UNVERTRAEGLICHKEIT(UNVERNR, NAME) VALUES (8,'Nussallergie');
 
 
 /******************************************************************************/
@@ -231,27 +231,26 @@ INSERT INTO UNVERTRAEGLICHKEIT(UNVERNR, NAME) VALUES (8,'Nussallergie')
 /******************************************************************************/
 
 
-INSERT INTO REZEPT(REZEPTNR, TITEL, INHALT) VALUES (1,'Die ultimative vegane Lasagne','schmeckt besser als das Original beim Italiener')
+INSERT INTO REZEPT(REZEPTNR, TITEL, INHALT) VALUES (1,'Die ultimative vegane Lasagne','schmeckt besser als das Original beim Italiener');
 
-INSERT INTO REZEPT(REZEPTNR, TITEL, INHALT) VALUES (2,'Veganer Schokokuchen','ohne tierische Profukte, mit mega Schokogeschmack und supersaftig')
+INSERT INTO REZEPT(REZEPTNR, TITEL, INHALT) VALUES (2,'Veganer Schokokuchen','ohne tierische Profukte, mit mega Schokogeschmack und supersaftig');
 
-INSERT INTO REZEPT(REZEPTNR, TITEL, INHALT) VALUES (3,'Vegetarische Frikadellen','Mein Geheimrezept, wirklich sehr lecker')
+INSERT INTO REZEPT(REZEPTNR, TITEL, INHALT) VALUES (3,'Vegetarische Frikadellen','Mein Geheimrezept, wirklich sehr lecker');
 
-INSERT INTO REZEPT(REZEPTNR, TITEL, INHALT) VALUES (4,'Kaiserschmarrn','süß-pflaumige Verführung aus dem Backofen')
+INSERT INTO REZEPT(REZEPTNR, TITEL, INHALT) VALUES (4,'Kaiserschmarrn','süß-pflaumige Verführung aus dem Backofen');
 
-INSERT INTO REZEPT(REZEPTNR, TITEL, INHALT) VALUES (5,'Frühstücks-Muffins','Simpel und schnell gemacht')
+INSERT INTO REZEPT(REZEPTNR, TITEL, INHALT) VALUES (5,'Frühstücks-Muffins','Simpel und schnell gemacht');
 
-INSERT INTO REZEPT(REZEPTNR, TITEL, INHALT) VALUES (6,'Spätzle mit Hähnchen','einfaches Spätzle-Gericht mit Hähnchen')
+INSERT INTO REZEPT(REZEPTNR, TITEL, INHALT) VALUES (6,'Spätzle mit Hähnchen','einfaches Spätzle-Gericht mit Hähnchen');
 
-INSERT INTO REZEPT(REZEPTNR, TITEL, INHALT) VALUES (7,'Gulaschsuppe im Topf','Zeitaufwändig, aber dafür mit überragendem Geschmack')
+INSERT INTO REZEPT(REZEPTNR, TITEL, INHALT) VALUES (7,'Gulaschsuppe im Topf','Zeitaufwändig, aber dafür mit überragendem Geschmack');
 
-INSERT INTO REZEPT(REZEPTNR, TITEL, INHALT) VALUES (8,'Königsberger Klopse','Rezept meiner Uroma Gertrud aus Stöcker aus Königsberg')
+INSERT INTO REZEPT(REZEPTNR, TITEL, INHALT) VALUES (8,'Königsberger Klopse','Rezept meiner Uroma Gertrud aus Stöcker aus Königsberg');
 
-INSERT INTO REZEPT(REZEPTNR, TITEL, INHALT) VALUES (9,'Leckerer Nudelsalat','einfach unschlagbar')
+INSERT INTO REZEPT(REZEPTNR, TITEL, INHALT) VALUES (9,'Leckerer Nudelsalat','einfach unschlagbar');
 
-INSERT INTO REZEPT(REZEPTNR, TITEL, INHALT) VALUES (10,'Kartoffelsuppe','schmeckt mit Würstchen besonders gut, Rezept für den Schnellkochtopf')
+INSERT INTO REZEPT(REZEPTNR, TITEL, INHALT) VALUES (10,'Kartoffelsuppe','schmeckt mit Würstchen besonders gut, Rezept für den Schnellkochtopf');
 
-INSERT INTO REZEPT(REZEPTNR, TITEL, INHALT) VALUES (11,'Kartoffelgratin','einfach würzig und gut')
-
+INSERT INTO REZEPT(REZEPTNR, TITEL, INHALT) VALUES (11,'Kartoffelgratin','einfach würzig und gut');
 
 COMMIT WORK;
