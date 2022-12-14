@@ -80,21 +80,7 @@ class _DatabasePageState extends ContentPageState {
           },
         )),
       ],
-      rows: [
-        DataRow(cells: [
-          DataCell(databaseTableEntry("test1", context)),
-          DataCell(databaseTableEntry("2354752895723895", context)),
-          DataCell(databaseTableEntry(
-              "Milk, Eggs, Pork, Whatever, dkjhfgsd fsd, sdlkfjghsdf, sdlfjkhgsdfkjhsdf, sdkljfhgsdkjfhgsdf,sdfgsdjkhds, sdljhfgdsfjhgsdf, sdljfhgsdf",
-              context)),
-        ]),
-        DataRow(cells: [
-          DataCell(databaseTableEntry("test2", context)),
-          DataCell(databaseTableEntry("2375627523", context)),
-          DataCell(databaseTableEntry(
-              "Cream, Eggs, Strawberries, Whatever", context)),
-        ])
-      ],
+      rows: const [],
     );
   }
 }

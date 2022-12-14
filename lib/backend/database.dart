@@ -145,7 +145,8 @@ class DatabaseManager {
   static Future<List<Recipe>> getRecipes(
       [List<int>? recipesIds,
       List<int>? intolerances,
-      List<int>? categories]) async {
+      List<int>? categories,
+      String? where]) async {
     final List<Recipe> recipes = [];
     if (_connection == null) {
       print("no connection!");
@@ -176,6 +177,12 @@ class DatabaseManager {
       recipes.add(Recipe.fromResultRow(resultRow));
     }
     return recipes;
+  }
+
+  static Future<void> setField(String database, String identifier,
+      String identifierValue, String newValue, String columnName) async {
+    _connection!.query(
+        "UPDATE $database SET $columnName = $newValue WHERE $identifier = $identifierValue");
   }
 
   static _checkInterlorenace(int interlorenceId, int recipeId) {}

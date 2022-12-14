@@ -39,10 +39,12 @@ class _RecipesPageState extends ContentPageState {
 
     var x = await DatabaseManager.getRecipes().then((recipes) {
       recipes.asMap().forEach((index, recipe) {
-        titles.add(DataCell(databaseTableEntry(recipe.title, context)));
-        contents.add(DataCell(databaseTableEntry(recipe.content, context)));
-        recipeIds.add(
-            DataCell(databaseTableEntry(recipe.recipeId.toString(), context)));
+        titles.add(DataCell(databaseTableEntry(
+            recipe.title, context, "REZEPT", recipe.recipeId, "TITEL", () => setState(() {}), false)));
+        contents.add(DataCell(databaseTableEntry(
+            recipe.content, context, "REZEPT", recipe.recipeId, "INHALT", () => setState(() {}), false)));
+        recipeIds.add(DataCell(databaseTableEntry(recipe.recipeId.toString(),
+            context, "REZEPT", recipe.recipeId, "REZEPTNR", () => setState(() {}), true)));
 
         DataCell item1 = contents[index];
         DataCell item2 = contents[index];
