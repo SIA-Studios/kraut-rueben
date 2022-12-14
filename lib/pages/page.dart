@@ -8,7 +8,7 @@ abstract class ContentPage extends ConsumerStatefulWidget {
 
 abstract class ContentPageState extends ConsumerState<ContentPage> {
   String? get title;
-  Widget? get content;
+  Future<Widget?> get content;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +39,19 @@ abstract class ContentPageState extends ConsumerState<ContentPage> {
                           padding: EdgeInsets.all(30),
                           physics: physics,
                           controller: controller,
-                          child: SizedBox(width: double.infinity, child: content))),
+                          child: SizedBox(
+                              width: double.infinity,
+                              child: FutureBuilder(
+                                future: content,
+                                builder: (context, snapshot) {
+                                  if (snapshot.data == null) {
+                                    print("rendering page container");
+                                    return Container();
+                                  }
+                                  print("rendering page content");
+                                  return snapshot.data!;
+                                },
+                              )))),
             ),
           ),
         ),

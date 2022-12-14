@@ -147,9 +147,12 @@ class DatabaseManager {
       List<int>? intolerances,
       List<int>? categories]) async {
     final List<Recipe> recipes = [];
-    if (_connection == null) return recipes;
+    if (_connection == null) {
+      print("no connection!");
+      return recipes;
+    }
 
-    if (recipesIds != null) {
+    /*if (recipesIds != null) {
       final results = await _connection!
           .queryMulti("SELECT * FROM REZEPT WHERE REZEPTNR = ?", [recipesIds]);
 
@@ -164,8 +167,14 @@ class DatabaseManager {
       if (intolerances != null) {}
 
       //recipes.add(Recipe.fromResultRow(resultRow));
-    }
+    }*/
 
+    final results = await _connection!.query("SELECT * FROM REZEPT");
+    for (final resultRow in results) {
+      if (intolerances != null) {}
+
+      recipes.add(Recipe.fromResultRow(resultRow));
+    }
     return recipes;
   }
 

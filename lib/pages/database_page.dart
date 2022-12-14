@@ -29,69 +29,72 @@ class _DatabasePageState extends ContentPageState {
   String? get title => "Database";
 
   @override
-  Widget? get content => DataTable(
-        columns: [
-          DataColumn(label: GestureDetector(
-            onTap: () => showLoginPopup(),
-            child: Text("title")
-            )),
-          DataColumn(
-              label: CustomDropdownButton2(
-            key: const Key("dropdownButton1"),
-            buttonDecoration: BoxDecoration(
-                border: Border.all(color: Colors.transparent),
-                borderRadius: BorderRadius.circular(15)),
-            icon: const Icon(
-              Icons.arrow_drop_down,
-              size: 25,
-              color: Colors.black,
-            ),
-            dropdownHeight: 5000,
-            hint: 'Select Item',
-            dropdownItems: dropdownItems,
-            value: selectedValue1,
-            onChanged: (value) {
-              setState(() {
-                selectedValue1 = value!;
-              });
-            },
-          )),
-          DataColumn(
-              label: CustomDropdownButton2(
-            key: const Key("dropdownButton2"),
-            buttonDecoration: BoxDecoration(
-                border: Border.all(color: Colors.transparent),
-                borderRadius: BorderRadius.circular(15)),
-            icon: const Icon(
-              Icons.arrow_drop_down,
-              size: 25,
-              color: Colors.black,
-            ),
-            dropdownHeight: 5000,
-            hint: 'Select Item',
-            dropdownItems: dropdownItems,
-            value: selectedValue2,
-            onChanged: (value) {
-              setState(() {
-                selectedValue2 = value!;
-              });
-            },
-          )),
-        ],
-        rows: [
-          DataRow(cells: [
-            DataCell(databaseTableEntry("test1", context)),
-            DataCell(databaseTableEntry("2354752895723895", context)),
-            DataCell(databaseTableEntry(
-                "Milk, Eggs, Pork, Whatever, dkjhfgsd fsd, sdlkfjghsdf, sdlfjkhgsdfkjhsdf, sdkljfhgsdkjfhgsdf,sdfgsdjkhds, sdljhfgdsfjhgsdf, sdljfhgsdf",
-                context)),
-          ]),
-          DataRow(cells: [
-            DataCell(databaseTableEntry("test2", context)),
-            DataCell(databaseTableEntry("2375627523", context)),
-            DataCell(databaseTableEntry(
-                "Cream, Eggs, Strawberries, Whatever", context)),
-          ])
-        ],
-      );
+  Future<Widget?> get content => contentWidget();
+
+  Future<Widget> contentWidget() async {
+    return DataTable(
+      columns: [
+        DataColumn(
+            label: GestureDetector(
+                onTap: () => showLoginPopup(), child: Text("title"))),
+        DataColumn(
+            label: CustomDropdownButton2(
+          key: const Key("dropdownButton1"),
+          buttonDecoration: BoxDecoration(
+              border: Border.all(color: Colors.transparent),
+              borderRadius: BorderRadius.circular(15)),
+          icon: const Icon(
+            Icons.arrow_drop_down,
+            size: 25,
+            color: Colors.black,
+          ),
+          dropdownHeight: 5000,
+          hint: 'Select Item',
+          dropdownItems: dropdownItems,
+          value: selectedValue1,
+          onChanged: (value) {
+            setState(() {
+              selectedValue1 = value!;
+            });
+          },
+        )),
+        DataColumn(
+            label: CustomDropdownButton2(
+          key: const Key("dropdownButton2"),
+          buttonDecoration: BoxDecoration(
+              border: Border.all(color: Colors.transparent),
+              borderRadius: BorderRadius.circular(15)),
+          icon: const Icon(
+            Icons.arrow_drop_down,
+            size: 25,
+            color: Colors.black,
+          ),
+          dropdownHeight: 5000,
+          hint: 'Select Item',
+          dropdownItems: dropdownItems,
+          value: selectedValue2,
+          onChanged: (value) {
+            setState(() {
+              selectedValue2 = value!;
+            });
+          },
+        )),
+      ],
+      rows: [
+        DataRow(cells: [
+          DataCell(databaseTableEntry("test1", context)),
+          DataCell(databaseTableEntry("2354752895723895", context)),
+          DataCell(databaseTableEntry(
+              "Milk, Eggs, Pork, Whatever, dkjhfgsd fsd, sdlkfjghsdf, sdlfjkhgsdfkjhsdf, sdkljfhgsdkjfhgsdf,sdfgsdjkhds, sdljhfgdsfjhgsdf, sdljfhgsdf",
+              context)),
+        ]),
+        DataRow(cells: [
+          DataCell(databaseTableEntry("test2", context)),
+          DataCell(databaseTableEntry("2375627523", context)),
+          DataCell(databaseTableEntry(
+              "Cream, Eggs, Strawberries, Whatever", context)),
+        ])
+      ],
+    );
+  }
 }

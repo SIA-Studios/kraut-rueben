@@ -4,6 +4,7 @@ import 'package:kraut_rueben/pages/database_page.dart';
 import 'package:kraut_rueben/pages/ingredients_page.dart';
 import 'package:kraut_rueben/pages/recipes_page.dart';
 
+import 'backend/database.dart';
 import 'main.dart';
 
 class HomePage extends StatefulWidget {
@@ -14,6 +15,13 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
+  Future<ConnectionStatus> _login() async {
+    bool connected = false;
+    ConnectionStatus status =
+        await DatabaseManager.connectToDatabase("tim", ")EZ[6euWtXKou2z)");
+    return status;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -21,16 +29,27 @@ class HomePageState extends State<HomePage> {
       child: ValueListenableBuilder(
           valueListenable: MyApp.currentTab,
           builder: (context, value, child) {
-            return IndexedStack(
-              alignment: Alignment.center,
-              index: value,
-              children: const [
-                DatabasePage(),
-                CategoriesPage(),
-                RecipesPage(),
-                IngredientsPage(),
-              ],
-            );
+            return FutureBuilder(
+                future: _login(),
+                builder: (context, snapshot) {
+                  if (snapshot.data != ConnectionStatus.success) {
+                    _login();
+                    print("rendering container");
+                    return Container();
+                  }
+                  print(snapshot.data);
+                  print("rendering stack");
+                  return IndexedStack(
+                    alignment: Alignment.center,
+                    index: value,
+                    children: const [
+                      DatabasePage(),
+                      CategoriesPage(),
+                      RecipesPage(),
+                      IngredientsPage(),
+                    ],
+                  );
+                });
           }),
     );
   }

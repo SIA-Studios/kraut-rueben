@@ -1,8 +1,11 @@
 import 'package:dropdown_button2/custom_dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kraut_rueben/backend/database.dart';
+import 'package:kraut_rueben/models/ingredient.dart';
 import 'package:kraut_rueben/pages/page.dart';
 
+import '../models/recipe.dart';
 import '../utils/table.dart';
 
 class RecipesPage extends ContentPage {
@@ -14,78 +17,111 @@ class RecipesPage extends ContentPage {
 
 class _RecipesPageState extends ContentPageState {
   final List<String> dropdownItems = [
-    'id',
+    'recipeId',
     'ingredients',
-    'allergens',
-    'price',
-    'weight',
+    'content',
   ];
 
-  String selectedValue1 = 'id';
-  String selectedValue2 = 'ingredients';
+  String selectedValue1 = 'ingredients';
+  String selectedValue2 = 'content';
 
   @override
   String? get title => "Recipes";
 
   @override
-  Widget? get content => DataTable(
-        columns: [
-          const DataColumn(label: Text("title")),
-          DataColumn(
-              label: CustomDropdownButton2(
-            key: const Key("dropdownButton1"),
-            buttonDecoration: BoxDecoration(
-                border: Border.all(color: Colors.transparent),
-                borderRadius: BorderRadius.circular(15)),
-            icon: const Icon(
-              Icons.arrow_drop_down,
-              size: 25,
-              color: Colors.black,
-            ),
-            dropdownHeight: 5000,
-            hint: 'Select Item',
-            dropdownItems: dropdownItems,
-            value: selectedValue1,
-            onChanged: (value) {
-              setState(() {
-                selectedValue1 = value!;
-              });
-            },
-          )),
-          DataColumn(
-              label: CustomDropdownButton2(
-            key: const Key("dropdownButton2"),
-            buttonDecoration: BoxDecoration(
-                border: Border.all(color: Colors.transparent),
-                borderRadius: BorderRadius.circular(15)),
-            icon: const Icon(
-              Icons.arrow_drop_down,
-              size: 25,
-              color: Colors.black,
-            ),
-            dropdownHeight: 5000,
-            hint: 'Select Item',
-            dropdownItems: dropdownItems,
-            value: selectedValue2,
-            onChanged: (value) {
-              setState(() {
-                selectedValue2 = value!;
-              });
-            },
-          )),
-        ],
-        rows: [
-          DataRow(cells: [
-            DataCell(databaseTableEntry("Dinner", context)),
-            DataCell(databaseTableEntry("2354752895723895", context)),
-            DataCell(databaseTableEntry("Milk, Eggs, Pork", context)),
-          ]),
-          DataRow(cells: [
-            DataCell(databaseTableEntry("Cake", context)),
-            DataCell(databaseTableEntry("2375627523", context)),
-            DataCell(databaseTableEntry(
-                "Cream, Eggs, Strawberries, Flour", context)),
-          ])
-        ],
-      );
+  Future<Widget?> get content => createDataTable();
+
+  Future<DataTable> createDataTable() async {
+    List<DataRow> recipeRows = [];
+    List<DataCell> titles = [];
+    List<DataCell> contents = [];
+    List<DataCell> recipeIds = [];
+
+    var x = await DatabaseManager.getRecipes().then((recipes) {
+      recipes.asMap().forEach((index, recipe) {
+        titles.add(DataCell(databaseTableEntry(recipe.title, context)));
+        contents.add(DataCell(databaseTableEntry(recipe.content, context)));
+        recipeIds.add(
+            DataCell(databaseTableEntry(recipe.recipeId.toString(), context)));
+
+        DataCell item1 = contents[index];
+        DataCell item2 = contents[index];
+
+        switch (selectedValue1) {
+          case 'recipeId':
+            item1 = recipeIds[index];
+            break;
+          case 'ingredients':
+            item1 = contents[index];
+            break;
+          case 'content':
+            item1 = contents[index];
+            break;
+        }
+
+        switch (selectedValue2) {
+          case 'recipeId':
+            item2 = recipeIds[index];
+            break;
+          case 'ingredients':
+            item2 = contents[index];
+            break;
+          case 'content':
+            item2 = contents[index];
+            break;
+        }
+
+        recipeRows.add(DataRow(cells: [titles[index], item1, item2]));
+      });
+    });
+
+    return DataTable(
+      columns: [
+        const DataColumn(label: Text("title")),
+        DataColumn(
+            label: CustomDropdownButton2(
+          key: const Key("dropdownButton1"),
+          buttonDecoration: BoxDecoration(
+              border: Border.all(color: Colors.transparent),
+              borderRadius: BorderRadius.circular(15)),
+          icon: const Icon(
+            Icons.arrow_drop_down,
+            size: 25,
+            color: Colors.black,
+          ),
+          dropdownHeight: 5000,
+          hint: 'Select Item',
+          dropdownItems: dropdownItems,
+          value: selectedValue1,
+          onChanged: (value) {
+            setState(() {
+              selectedValue1 = value!;
+            });
+          },
+        )),
+        DataColumn(
+            label: CustomDropdownButton2(
+          key: const Key("dropdownButton2"),
+          buttonDecoration: BoxDecoration(
+              border: Border.all(color: Colors.transparent),
+              borderRadius: BorderRadius.circular(15)),
+          icon: const Icon(
+            Icons.arrow_drop_down,
+            size: 25,
+            color: Colors.black,
+          ),
+          dropdownHeight: 5000,
+          hint: 'Select Item',
+          dropdownItems: dropdownItems,
+          value: selectedValue2,
+          onChanged: (value) {
+            setState(() {
+              selectedValue2 = value!;
+            });
+          },
+        )),
+      ],
+      rows: recipeRows,
+    );
+  }
 }

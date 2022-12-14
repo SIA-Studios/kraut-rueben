@@ -5,6 +5,8 @@ import 'package:kraut_rueben/home.dart';
 import 'package:kraut_rueben/sidemenu.dart';
 import 'package:kraut_rueben/utils/transitions.dart';
 
+import 'backend/database.dart';
+
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
@@ -16,7 +18,6 @@ void main() async {
     win.size = initialSize;
     win.alignment = Alignment.center;
     win.show();
-    showLoginPopup();
   });
 }
 
@@ -99,7 +100,7 @@ class RightSide extends StatelessWidget {
               children: [Expanded(child: MoveWindow()), const WindowButtons()],
             ),
           ),
-          const Expanded(child: HomePage())
+          HomePage()
         ]),
       ),
     );

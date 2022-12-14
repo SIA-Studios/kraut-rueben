@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kraut_rueben/utils/transitions.dart';
 
-Widget databaseTableEntry(String text, BuildContext context) {
+Widget databaseTableEntry(String text, BuildContext context, int recipeId, String queryType) {
   return GestureDetector(
     onTap: () {
       showInputPopup(title: "test", initialValue: text);
