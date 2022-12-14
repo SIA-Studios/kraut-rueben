@@ -148,34 +148,49 @@ class DatabaseManager {
       List<int>? categories,
       String? where]) async {
     final List<Recipe> recipes = [];
-    if (_connection == null) {
-      print("no connection!");
-      return recipes;
-    }
+    if (_connection == null) return recipes;
 
-    /*if (recipesIds != null) {
+    if (recipesIds != null) {
       final results = await _connection!
           .queryMulti("SELECT * FROM REZEPT WHERE REZEPTNR = ?", [recipesIds]);
 
       for (final result in results) {
         final resultRow = result.first;
+        recipes.add(Recipe.fromResultRow(resultRow, await _getIngredientsByRecipe(resultRow["REZEPTNR"])));
       }
       return recipes;
     }
-
-    final results = await _connection!.query("SELECT * FROM REZEPT");
-    for (final resultRow in results) {
-      if (intolerances != null) {}
-
-      //recipes.add(Recipe.fromResultRow(resultRow));
-    }*/
-
-    final results = await _connection!.query("SELECT * FROM REZEPT");
-    for (final resultRow in results) {
-      if (intolerances != null) {}
-
-      recipes.add(Recipe.fromResultRow(resultRow));
+    if (intolerances != null && categories != null) {
+      final results = await _connection!.query(
+          "SELECT DISTINCT REZEPT.titel, REZEPT.inhalt FROM REZEPT, REZEPTZUTAT, ZUTATUNVERTRAEGLICHKEIT, UNVERTRAEGLICHKEIT, REZEPTKATEGORIE, KATEGORIE WHERE (REZEPT.rezeptnr = REZEPTZUTAT.rezeptnr AND REZEPTZUTAT.zutatennr = ZUTATUNVERTRAEGLICHKEIT.zutatennr AND ZUTATUNVERTRAEGLICHKEIT.unvernr != UNVERTRAEGLICHKEIT.unvernr AND UNVERTRAEGLICHKEIT.unvernr = ?) AND (REZEPT.rezeptnr = REZEPTKATEGORIE.rezeptnr AND REZEPTKATEGORIE.kategorienr = KATEGORIE.kategorienr AND KATEGORIE.kategorienr = ?)",
+          [intolerances.first, categories.first]);
+      for (final result in results) {
+        recipes.add(Recipe.fromResultRow(result, await _getIngredientsByRecipe(result["REZEPTNR"])));
+      }
+      return recipes;
     }
+    if (intolerances != null) {
+      final results = await _connection!.query(
+          "SELECT DISTINCT REZEPT.titel, REZEPT.inhalt FROM REZEPT, REZEPTZUTAT, ZUTATUNVERTRAEGLICHKEIT, UNVERTRAEGLICHKEIT WHERE REZEPT.rezeptnr = REZEPTZUTAT.rezeptnr AND REZEPTZUTAT.zutatennr = ZUTATUNVERTRAEGLICHKEIT.zutatennr AND ZUTATUNVERTRAEGLICHKEIT.unvernr != UNVERTRAEGLICHKEIT.unvernr AND UNVERTRAEGLICHKEIT.unvernr = ?",
+          [intolerances.first]);
+      for (final result in results) {
+        recipes.add(Recipe.fromResultRow(result, await _getIngredientsByRecipe(result["REZEPTNR"])));
+      }
+      return recipes;
+    }
+    if (categories != null) {
+      final results = await _connection!.query(
+          "SELECT DISTINCT REZEPT.titel, REZEPT.inhalt, KATEGORIE.name FROM REZEPT, REZEPTKATEGORIE, KATEGORIE WHERE REZEPT.rezeptnr = REZEPTKATEGORIE.rezeptnr AND REZEPTKATEGORIE.kategorienr = KATEGORIE.kategorienr AND KATEGORIE.kategorienr = ?",
+          [categories.first]);
+      for (final result in results) {
+        recipes.add(Recipe.fromResultRow(result, await _getIngredientsByRecipe(result["REZEPTNR"])));
+      }
+      return recipes;
+    }
+    final results = await _connection!.query("SELECT * FROM REZEPT");
+    for (final result in results) {
+        recipes.add(Recipe.fromResultRow(result, await _getIngredientsByRecipe(result["REZEPTNR"])));
+      }
     return recipes;
   }
 
