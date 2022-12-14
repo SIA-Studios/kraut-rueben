@@ -155,7 +155,7 @@ class DatabaseManager {
 
       for (final result in results) {
         final resultRow = result.first;
-        recipes.add(Recipe.fromResultRow(resultRow));
+        recipes.add(Recipe.fromResultRow(resultRow, await _getIngredientsByRecipe(resultRow["REZEPTNR"])));
       }
       return recipes;
     }
@@ -164,7 +164,7 @@ class DatabaseManager {
           "SELECT DISTINCT REZEPT.titel, REZEPT.inhalt FROM REZEPT, REZEPTZUTAT, ZUTATUNVERTRAEGLICHKEIT, UNVERTRAEGLICHKEIT, REZEPTKATEGORIE, KATEGORIE WHERE (REZEPT.rezeptnr = REZEPTZUTAT.rezeptnr AND REZEPTZUTAT.zutatennr = ZUTATUNVERTRAEGLICHKEIT.zutatennr AND ZUTATUNVERTRAEGLICHKEIT.unvernr != UNVERTRAEGLICHKEIT.unvernr AND UNVERTRAEGLICHKEIT.unvernr = ?) AND (REZEPT.rezeptnr = REZEPTKATEGORIE.rezeptnr AND REZEPTKATEGORIE.kategorienr = KATEGORIE.kategorienr AND KATEGORIE.kategorienr = ?)",
           [intolerances.first, categories.first]);
       for (final result in results) {
-        recipes.add(Recipe.fromResultRow(result));
+        recipes.add(Recipe.fromResultRow(result, await _getIngredientsByRecipe(result["REZEPTNR"])));
       }
       return recipes;
     }
@@ -173,7 +173,7 @@ class DatabaseManager {
           "SELECT DISTINCT REZEPT.titel, REZEPT.inhalt FROM REZEPT, REZEPTZUTAT, ZUTATUNVERTRAEGLICHKEIT, UNVERTRAEGLICHKEIT WHERE REZEPT.rezeptnr = REZEPTZUTAT.rezeptnr AND REZEPTZUTAT.zutatennr = ZUTATUNVERTRAEGLICHKEIT.zutatennr AND ZUTATUNVERTRAEGLICHKEIT.unvernr != UNVERTRAEGLICHKEIT.unvernr AND UNVERTRAEGLICHKEIT.unvernr = ?",
           [intolerances.first]);
       for (final result in results) {
-        recipes.add(Recipe.fromResultRow(result));
+        recipes.add(Recipe.fromResultRow(result, await _getIngredientsByRecipe(result["REZEPTNR"])));
       }
       return recipes;
     }
@@ -182,13 +182,13 @@ class DatabaseManager {
           "SELECT DISTINCT REZEPT.titel, REZEPT.inhalt, KATEGORIE.name FROM REZEPT, REZEPTKATEGORIE, KATEGORIE WHERE REZEPT.rezeptnr = REZEPTKATEGORIE.rezeptnr AND REZEPTKATEGORIE.kategorienr = KATEGORIE.kategorienr AND KATEGORIE.kategorienr = ?",
           [categories.first]);
       for (final result in results) {
-        recipes.add(Recipe.fromResultRow(result));
+        recipes.add(Recipe.fromResultRow(result, await _getIngredientsByRecipe(result["REZEPTNR"])));
       }
       return recipes;
     }
     final results = await _connection!.query("SELECT * FROM REZEPT");
     for (final result in results) {
-        recipes.add(Recipe.fromResultRow(result));
+        recipes.add(Recipe.fromResultRow(result, await _getIngredientsByRecipe(result["REZEPTNR"])));
       }
     return recipes;
   }

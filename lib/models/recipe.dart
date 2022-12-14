@@ -5,11 +5,11 @@ class Recipe {
   final int recipeId;
   final String title;
   final String content;
-  //final Map<Ingredient, int> ingredients;
+  final Map<Ingredient, int> ingredients;
 
-  Recipe(this.recipeId, this.title, this.content);
+  Recipe(this.recipeId, this.title, this.content, this.ingredients);
 
-  factory Recipe.fromResultRow(ResultRow values) {
-    return Recipe(values["REZEPTNR"], values['TITEL'], values['INHALT'].toString());
+  factory Recipe.fromResultRow(ResultRow values, Map<Ingredient, int> ingredients) {
+    return Recipe(values["REZEPTNR"], values['TITEL'], values['INHALT'].toString(), ingredients);
   }
 }
