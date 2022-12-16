@@ -7,6 +7,6 @@ class Intolerance {
   Intolerance(this.intolreanceId, this.name);
 
   factory Intolerance.fromResultRow(ResultRow values) {
-    return Intolerance(values['UNVERID'], values['NAME']);
+    return Intolerance(values['UNVERNR'], values['NAME']);
   }
 }

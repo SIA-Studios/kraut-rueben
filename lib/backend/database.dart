@@ -77,7 +77,7 @@ class DatabaseManager {
     if (_connection == null) return null;
 
     final result = await _connection!.query(
-        "SELECT * FROM UNVERTRAEGLICHKEIT WHERE UNVERID	= ?", [intoleranceId]);
+        "SELECT * FROM UNVERTRAEGLICHKEIT WHERE UNVERNR	= ?", [intoleranceId]);
     if (result.isEmpty) return null;
 
     final intolerance = Intolerance.fromResultRow(result.first);
@@ -92,10 +92,10 @@ class DatabaseManager {
     if (_connection == null) return intolerances;
 
     final results = await _connection!.query(
-        "SELECT UNVERID FROM UNVERTRAEGLICHKEITZUTAT WHERE ZUTATENNR	= ?",
+        "SELECT UNVERNR FROM ZUTATUNVERTRAEGLICHKEIT WHERE ZUTATENNR	= ?",
         [ingredientId]);
     for (final result in results) {
-      final int intoleranceId = result['UNVERID'];
+      final int intoleranceId = result['UNVERNR'];
       final intolerance = await getIntolerance(intoleranceId);
 
       if (intolerance == null) continue;

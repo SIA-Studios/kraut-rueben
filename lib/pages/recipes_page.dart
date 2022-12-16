@@ -20,9 +20,10 @@ class _RecipesPageState extends ContentPageState {
     'recipeId',
     'ingredients',
     'content',
+    'ingredientsAmount'
   ];
 
-  String selectedValue1 = 'ingredients';
+  String selectedValue1 = 'recipeId';
   String selectedValue2 = 'content';
 
   @override
@@ -36,15 +37,46 @@ class _RecipesPageState extends ContentPageState {
     List<DataCell> titles = [];
     List<DataCell> contents = [];
     List<DataCell> recipeIds = [];
+    List<DataCell> ingredients = [];
+    List<DataCell> ingredientsAmount = [];
 
     var x = await DatabaseManager.getRecipes().then((recipes) {
       recipes.asMap().forEach((index, recipe) {
-        titles.add(DataCell(databaseTableEntry(
-            recipe.title, context, "REZEPT", recipe.recipeId, "TITEL", () => setState(() {}), false)));
+        titles.add(DataCell(databaseTableEntry([recipe.title], context,
+            "REZEPT", recipe.recipeId, "TITEL", () => setState(() {}), false, false)));
         contents.add(DataCell(databaseTableEntry(
-            recipe.content, context, "REZEPT", recipe.recipeId, "INHALT", () => setState(() {}), false)));
-        recipeIds.add(DataCell(databaseTableEntry(recipe.recipeId.toString(),
-            context, "REZEPT", recipe.recipeId, "REZEPTNR", () => setState(() {}), true)));
+            [recipe.content],
+            context,
+            "REZEPT",
+            recipe.recipeId,
+            "INHALT",
+            () => setState(() {}),
+            false,
+            false)));
+        recipeIds.add(DataCell(databaseTableEntry(
+            [recipe.recipeId.toString()],
+            context,
+            "REZEPT",
+            recipe.recipeId,
+            "REZEPTNR",
+            () => setState(() {}),
+            true,
+            false)));
+
+        List<String> ingrendientNames = [];
+        recipe.ingredients.keys.forEach((element) {
+          ingrendientNames.add(element.name);
+        });
+
+        ingredients.add(DataCell(databaseTableEntry(
+            ingrendientNames,
+            context,
+            "REZEPTZUTAT",
+            recipe.recipeId,
+            "ZUTATENNR",
+            () => setState(() {}),
+            false,
+            true)));
 
         DataCell item1 = contents[index];
         DataCell item2 = contents[index];
@@ -54,10 +86,13 @@ class _RecipesPageState extends ContentPageState {
             item1 = recipeIds[index];
             break;
           case 'ingredients':
-            item1 = contents[index];
+            item1 = ingredients[index];
             break;
           case 'content':
             item1 = contents[index];
+            break;
+          case 'ingredientsAmount':
+            item1 = ingredientsAmount[index];
             break;
         }
 
@@ -66,10 +101,13 @@ class _RecipesPageState extends ContentPageState {
             item2 = recipeIds[index];
             break;
           case 'ingredients':
-            item2 = contents[index];
+            item2 = ingredients[index];
             break;
           case 'content':
             item2 = contents[index];
+            break;
+          case 'ingredientsAmount':
+            item2 = ingredientsAmount[index];
             break;
         }
 
