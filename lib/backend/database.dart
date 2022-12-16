@@ -36,9 +36,10 @@ class DatabaseManager {
     return ConnectionStatus.error;
   }
 
-  static Future<void> closeConnection() async {
-    if (_connection == null) return;
+  static Future<bool> closeConnection() async {
+    if (_connection == null) return false;
     await _connection!.close();
+    return true;
   }
 
   static Future<Customer?> getCustomer(int customerId) async {
@@ -210,6 +211,23 @@ class DatabaseManager {
     if (_connection == null) return null;
 
     return await _connection!.query(statement, values);
+  }
+
+  static Future<void> insertRecipe(Recipe recipe) async {
+    if (_connection == null) return;
+
+    await _connection!.query(
+        "INSERT INTO REZEPT(REZEPTNR, TITEL, INHALT) VALUES (?,?,?)",
+        [recipe.recipeId, recipe.title, recipe.content]);
+
+    for (int i = 0; i < recipe.ingredients.length; i++) {
+      final ingredient = recipe.ingredients.keys.toList()[i];
+      final amount = recipe.ingredients.values.toList()[i];
+
+      await _connection!.query(
+          "INSERT INTO REZEPTZUTAT(REZEPTNR, ZUTATENNR, MENGE) VALUES (?,?,?)",
+          [recipe.recipeId, ingredient.ingredientId, amount]);
+    }
   }
 }
 
