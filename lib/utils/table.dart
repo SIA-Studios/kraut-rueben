@@ -3,25 +3,42 @@ import 'package:kraut_rueben/backend/database.dart';
 import 'package:kraut_rueben/utils/transitions.dart';
 
 Widget databaseTableEntry(
-    String text,
+    List<String> content,
     BuildContext context,
     String database,
-    int recipeId,
+    int primaryKey,
     String columnName,
     void Function() setStateOnConfirm,
-    bool disableEditing) {
+    bool disableEditing,
+    bool isArray) {
   return GestureDetector(
     onTap: () {
       if (disableEditing) return;
-      showInputPopup(
-        title: database,
-        initialValue: text,
-        onConfirm: (value) {
-          DatabaseManager.setField(database, "REZEPTNR", recipeId.toString(),
+      if (isArray) {
+        showInputArrayPopup(
+          title: database,
+          initialValue: content,
+          onConfirm: (value) {
+            /*DatabaseManager.setField(database, "REZEPTNR", primaryKey.toString(),
               value.runtimeType == int ? value : "\"$value\"", columnName);
-          setStateOnConfirm();
-        },
-      );
+          setStateOnConfirm();*/
+          },
+        );
+      } else {
+        showInputPopup(
+          title: database,
+          initialValue: content[0],
+          onConfirm: (value) {
+            DatabaseManager.setField(
+                database,
+                "REZEPTNR",
+                primaryKey.toString(),
+                value.runtimeType == int ? value : "\"$value\"",
+                columnName);
+            setStateOnConfirm();
+          },
+        );
+      }
     },
     child: Row(
       mainAxisSize: MainAxisSize.min,
@@ -38,7 +55,7 @@ Widget databaseTableEntry(
           ),
         Expanded(
           child: Text(
-            text,
+            content.join(", "),
             overflow: TextOverflow.fade,
             softWrap: false,
           ),
