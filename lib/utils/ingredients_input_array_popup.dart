@@ -44,39 +44,41 @@ class _IngredientsInputArrayPopupState
 
   @override
   void initState() {
-    print(widget.allIngredients.length);
-    widget.ingredientIds.asMap().forEach((index, ingredientID) {
-      selectedValue.add(widget.allIngredients
-          .firstWhere((element) =>
-              element.ingredientId.toString() ==
-              widget.ingredientIds[index].toString())
-          .name);
+    List<String> allIngredientsNames = [];
+    widget.allIngredients.forEach((element) {
+      allIngredientsNames.add(element.name);
     });
-    widget.ingredientAmounts.asMap().forEach((index, text) {
-      TextEditingController textFieldController =
-          TextEditingController(text: text);
-      List<String> allIngredientsNames = [];
-      widget.allIngredients.forEach((element) {
-        allIngredientsNames.add(element.name);
+    addSelectedValue = allIngredientsNames[0];
+
+    if (widget.ingredientIds.isNotEmpty) {
+      widget.ingredientIds.asMap().forEach((index, ingredientID) {
+        selectedValue.add(widget.allIngredients
+            .firstWhere((element) =>
+                element.ingredientId.toString() ==
+                widget.ingredientIds[index].toString())
+            .name);
       });
-      addSelectedValue = allIngredientsNames[0];
-      dropDownButtons.add(InputArrayDropdownButton(
-        controller: textFieldController,
-        selectedValue: selectedValue[index],
-        allIngredientsNames: allIngredientsNames,
-        index: index,
-        onChanged: ((value) {
-          setState(() {
-            selectedValue[index] = value!;
-          });
-        }),
-        onRemove: (i) {
-          setState(() {
-            dropDownButtons.removeWhere((element) => element.index == i);
-          });
-        },
-      ));
-    });
+      widget.ingredientAmounts.asMap().forEach((index, text) {
+        TextEditingController textFieldController =
+            TextEditingController(text: text);
+        dropDownButtons.add(InputArrayDropdownButton(
+          controller: textFieldController,
+          selectedValue: selectedValue[index],
+          allIngredientsNames: allIngredientsNames,
+          index: index,
+          onChanged: ((value) {
+            setState(() {
+              selectedValue[index] = value!;
+            });
+          }),
+          onRemove: (i) {
+            setState(() {
+              dropDownButtons.removeWhere((element) => element.index == i);
+            });
+          },
+        ));
+      });
+    }
     super.initState();
   }
 
@@ -363,8 +365,8 @@ class _IngredientsInputArrayPopupState
                                                   element.name.toString() ==
                                                   field.selectedValue
                                                       .toString());
-                                          int index = dropDownButtons
-                                              .indexOf(field);
+                                          int index =
+                                              dropDownButtons.indexOf(field);
                                           outputList[ingredient.ingredientId
                                                   .toString()] =
                                               dropDownButtons[index]
