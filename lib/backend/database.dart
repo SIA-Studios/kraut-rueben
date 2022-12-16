@@ -261,6 +261,16 @@ class DatabaseManager {
 
     return orders;
   }
+
+  static Future<void> deleteRecipe(Recipe recipe) async {
+    if (_connection == null) return;
+
+    await _connection!.query(
+        "DELETE * FROM REZEPTZUTAT WHERE REZEPTNR = ?", [recipe.recipeId]);
+
+    await _connection!.query(
+        "DELETE * FROM REZEPTZUTAT WHERE REZEPTNR = ?", [recipe.recipeId]);
+  }
 }
 
 enum ConnectionStatus {
