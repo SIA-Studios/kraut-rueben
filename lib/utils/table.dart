@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kraut_rueben/backend/database.dart';
+import 'package:kraut_rueben/models/ingredient.dart';
 import 'package:kraut_rueben/utils/transitions.dart';
 
 Widget databaseTableEntry(
@@ -12,22 +13,34 @@ Widget databaseTableEntry(
     required void Function() setStateOnConfirm,
     required bool disableEditing,
     required bool isArray,
+    required String previewText,
+    List<Ingredient>? allIngredients,
     bool? isInt,
-    bool? isDouble
-    }) {
+    bool? isDouble,
+    List<String>? content2}) {
   return GestureDetector(
     onTap: () {
       if (disableEditing) return;
       if (isArray) {
-        showInputArrayPopup(
-          title: database,
-          initialValue: content,
-          onConfirm: (value) {
-            /*DatabaseManager.setField(database, "REZEPTNR", primaryKey.toString(),
-              value.runtimeType == int ? value : "\"$value\"", columnName);
-          setStateOnConfirm();*/
-          },
-        );
+        if (content2 != null && allIngredients != null) {
+          showMultiInputArrayPopup(
+            title: database,
+            allIngredients: allIngredients,
+            initialValue: content,
+            initialValue2: content2,
+            onConfirm: (value) {
+
+            },
+          );
+        } else {
+          showInputArrayPopup(
+            title: database,
+            initialValue: content,
+            onConfirm: (value) {
+              
+            },
+          );
+        }
       } else {
         showInputPopup(
           title: database,
@@ -61,7 +74,7 @@ Widget databaseTableEntry(
           ),
         Expanded(
           child: Text(
-            content.join(", "),
+            previewText,
             overflow: TextOverflow.fade,
             softWrap: false,
           ),

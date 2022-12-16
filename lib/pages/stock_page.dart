@@ -33,6 +33,7 @@ class _StockPageState extends ContentPageState {
         ingredients.asMap().forEach((index, ingredient) {
           ids.add(DataCell(databaseTableEntry(
               content: [ingredient.ingredientId.toString()],
+              previewText: ingredient.ingredientId.toString(),
               context: context,
               database: "ZUTAT",
               primaryKey: ingredient.ingredientId,
@@ -44,6 +45,7 @@ class _StockPageState extends ContentPageState {
               isInt: true)));
           stocks.add(DataCell(databaseTableEntry(
               content: [ingredient.stock.toString()],
+              previewText: "${ingredient.stock} ${ingredient.unit}",
               context: context,
               database: "ZUTAT",
               primaryKey: ingredient.ingredientId,
@@ -55,6 +57,7 @@ class _StockPageState extends ContentPageState {
               isInt: true)));
           names.add(DataCell(databaseTableEntry(
               content: [ingredient.name],
+              previewText: ingredient.name,
               context: context,
               database: "ZUTAT",
               primaryKey: ingredient.ingredientId,

@@ -66,11 +66,14 @@ class _RecipesPageState extends ContentPageState {
     List<DataCell> contents = [];
     List<DataCell> recipeIds = [];
     List<DataCell> ingredients = [];
+    List<Ingredient> allIngredients = [];
 
-    await DatabaseManager.getRecipes().then((recipes) {
+    await DatabaseManager.getRecipes().then((recipes) async {
+      await DatabaseManager.getIngredients().then((ingreds) => allIngredients = ingreds,);
       recipes.asMap().forEach((index, recipe) {
         titles.add(DataCell(databaseTableEntry(
             content: [recipe.title],
+            previewText: recipe.title,
             context: context,
             database: "REZEPT",
             primaryKey: recipe.recipeId,
@@ -81,6 +84,7 @@ class _RecipesPageState extends ContentPageState {
             isArray: false)));
         contents.add(DataCell(databaseTableEntry(
             content: [recipe.content],
+            previewText: recipe.content,
             context: context,
             database: "REZEPT",
             primaryKey: recipe.recipeId,
@@ -91,6 +95,7 @@ class _RecipesPageState extends ContentPageState {
             isArray: false)));
         recipeIds.add(DataCell(databaseTableEntry(
             content: [recipe.recipeId.toString()],
+            previewText: recipe.recipeId.toString(),
             context: context,
             database: "REZEPT",
             primaryKey: recipe.recipeId,
@@ -102,22 +107,29 @@ class _RecipesPageState extends ContentPageState {
             isInt: true)));
 
         List<String> ingrendientNames = [];
+        List<String> ingredientAmounts = [];
+        List<String> ingredientIds = [];
         recipe.ingredients.keys.forEach((element) {
           ingrendientNames.add(
               "${element.name} (${recipe.ingredients[element]} ${element.unit})");
+          ingredientAmounts.add(recipe.ingredients[element].toString());
+          ingredientIds.add(element.ingredientId.toString());
         });
 
         ingredients.add(DataCell(databaseTableEntry(
-            content: ingrendientNames,
-            context: context,
-            database: "REZEPTZUTAT",
-            primaryKey: recipe.recipeId,
-            columnName: "ZUTATENNR",
-            identifier: "REZEPTNR",
-            setStateOnConfirm: () => setState(() {}),
-            disableEditing: false,
-            isArray: true,
-            )));
+          allIngredients: allIngredients,
+          content: ingredientIds,
+          content2: ingredientAmounts,
+          previewText: ingrendientNames.join(", "),
+          context: context,
+          database: "REZEPTZUTAT",
+          primaryKey: recipe.recipeId,
+          columnName: "ZUTATENNR",
+          identifier: "REZEPTNR",
+          setStateOnConfirm: () => setState(() {}),
+          disableEditing: false,
+          isArray: true,
+        )));
 
         DataCell item1 = contents[index];
         DataCell item2 = contents[index];
