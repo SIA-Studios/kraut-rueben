@@ -6,6 +6,7 @@ import 'package:kraut_rueben/models/category.dart';
 import 'package:kraut_rueben/models/customer.dart';
 import 'package:kraut_rueben/models/ingredient.dart';
 import 'package:kraut_rueben/models/intolerance.dart';
+import 'package:kraut_rueben/models/order.dart';
 import 'package:kraut_rueben/models/recipe.dart';
 import 'package:mysql1/mysql1.dart';
 
@@ -36,9 +37,10 @@ class DatabaseManager {
     return ConnectionStatus.error;
   }
 
-  static Future<void> closeConnection() async {
-    if (_connection == null) return;
+  static Future<bool> closeConnection() async {
+    if (_connection == null) return false;
     await _connection!.close();
+    return true;
   }
 
   static Future<Customer?> getCustomer(int customerId) async {
@@ -222,6 +224,52 @@ class DatabaseManager {
     if (_connection == null) return null;
 
     return await _connection!.query(statement, values);
+  }
+
+  static Future<void> insertRecipe(Recipe recipe) async {
+    if (_connection == null) return;
+
+    await _connection!.query("INSERT INTO REZEPT(TITEL, INHALT) VALUES (?,?)",
+        [recipe.recipeId, recipe.title, recipe.content]);
+
+    for (int i = 0; i < recipe.ingredients.length; i++) {
+      final ingredient = recipe.ingredients.keys.toList()[i];
+      final amount = recipe.ingredients.values.toList()[i];
+
+      await _connection!.query(
+          "INSERT INTO REZEPTZUTAT(REZEPTNR, ZUTATENNR, MENGE) VALUES (?,?,?)",
+          [recipe.recipeId, ingredient.ingredientId, amount]);
+    }
+  }
+
+  static Future<Order?> getOrderById(int orderId) async {
+    if (_connection == null) return null;
+
+    final result = await _connection!
+        .query("SELECT * FROM BESTELLUNG WHERE BESTELLNR = ? ", [orderId]);
+    return Order.fromResultRow(result.first);
+  }
+
+  static Future<List<Order>> getOrders() async {
+    final List<Order> orders = [];
+    if (_connection == null) return orders;
+
+    final result = await _connection!.query("SELECT * FROM BESTELLUNG");
+    for (final resultRow in result) {
+      orders.add(Order.fromResultRow(resultRow));
+    }
+
+    return orders;
+  }
+
+  static Future<void> deleteRecipe(Recipe recipe) async {
+    if (_connection == null) return;
+
+    await _connection!.query(
+        "DELETE * FROM REZEPTZUTAT WHERE REZEPTNR = ?", [recipe.recipeId]);
+
+    await _connection!.query(
+        "DELETE * FROM REZEPTZUTAT WHERE REZEPTNR = ?", [recipe.recipeId]);
   }
 }
 
