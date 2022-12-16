@@ -41,7 +41,7 @@ class _RecipesPageState extends ContentPageState {
             RecipePopup(recipe: recipe),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           const curve = Cubic(0, 1, 0.5, 1);
-          const offsetBegin = Offset(0.0, 0.3);
+          const offsetBegin = Offset(0.0, 1);
           const offsetEnd = Offset.zero;
           const fadeBegin = 0.0;
           const fadeEnd = 1.0;
@@ -50,11 +50,12 @@ class _RecipesPageState extends ContentPageState {
           final fadeTween = Tween(begin: fadeBegin, end: fadeEnd)
               .chain(CurveTween(curve: curve));
           final offsetAnimation = animation.drive(offsetTween);
-          final fadeAnimation = animation.drive(fadeTween);
+          //final fadeAnimation = animation.drive(fadeTween);
 
           return SlideTransition(
             position: offsetAnimation,
-            child: FadeTransition(opacity: fadeAnimation, child: child),
+            //child: FadeTransition(opacity: fadeAnimation, child: child),
+            child: child,
           );
         }));
   }
@@ -66,35 +67,39 @@ class _RecipesPageState extends ContentPageState {
     List<DataCell> recipeIds = [];
     List<DataCell> ingredients = [];
 
-    var x = await DatabaseManager.getRecipes().then((recipes) {
+    await DatabaseManager.getRecipes().then((recipes) {
       recipes.asMap().forEach((index, recipe) {
         titles.add(DataCell(databaseTableEntry(
-            [recipe.title],
-            context,
-            "REZEPT",
-            recipe.recipeId,
-            "TITEL",
-            () => setState(() {}),
-            false,
-            false)));
+            content: [recipe.title],
+            context: context,
+            database: "REZEPT",
+            primaryKey: recipe.recipeId,
+            columnName: "TITEL",
+            identifier: "REZEPTNR",
+            setStateOnConfirm: () => setState(() {}),
+            disableEditing: false,
+            isArray: false)));
         contents.add(DataCell(databaseTableEntry(
-            [recipe.content],
-            context,
-            "REZEPT",
-            recipe.recipeId,
-            "INHALT",
-            () => setState(() {}),
-            false,
-            false)));
+            content: [recipe.content],
+            context: context,
+            database: "REZEPT",
+            primaryKey: recipe.recipeId,
+            columnName: "INHALT",
+            identifier: "REZEPTNR",
+            setStateOnConfirm: () => setState(() {}),
+            disableEditing: false,
+            isArray: false)));
         recipeIds.add(DataCell(databaseTableEntry(
-            [recipe.recipeId.toString()],
-            context,
-            "REZEPT",
-            recipe.recipeId,
-            "REZEPTNR",
-            () => setState(() {}),
-            true,
-            false)));
+            content: [recipe.recipeId.toString()],
+            context: context,
+            database: "REZEPT",
+            primaryKey: recipe.recipeId,
+            columnName: "REZEPTNR",
+            identifier: "REZEPTNR",
+            setStateOnConfirm: () => setState(() {}),
+            disableEditing: true,
+            isArray: false,
+            isInt: true)));
 
         List<String> ingrendientNames = [];
         recipe.ingredients.keys.forEach((element) {
@@ -103,14 +108,16 @@ class _RecipesPageState extends ContentPageState {
         });
 
         ingredients.add(DataCell(databaseTableEntry(
-            ingrendientNames,
-            context,
-            "REZEPTZUTAT",
-            recipe.recipeId,
-            "ZUTATENNR",
-            () => setState(() {}),
-            false,
-            true)));
+            content: ingrendientNames,
+            context: context,
+            database: "REZEPTZUTAT",
+            primaryKey: recipe.recipeId,
+            columnName: "ZUTATENNR",
+            identifier: "REZEPTNR",
+            setStateOnConfirm: () => setState(() {}),
+            disableEditing: false,
+            isArray: true,
+            )));
 
         DataCell item1 = contents[index];
         DataCell item2 = contents[index];

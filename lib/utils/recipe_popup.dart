@@ -1,8 +1,5 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:kraut_rueben/models/ingredient.dart';
 import 'package:kraut_rueben/models/recipe.dart';
 
 class RecipePopup extends StatelessWidget {
@@ -13,7 +10,7 @@ class RecipePopup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width * 0.4;
+    double width = MediaQuery.of(context).size.width * 0.5;
     double height = MediaQuery.of(context).size.height * 0.75;
     EdgeInsets padding = EdgeInsets.symmetric(
         vertical: 15, horizontal: MediaQuery.of(context).size.width * 0.05);
@@ -91,109 +88,114 @@ class RecipePopup extends StatelessWidget {
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
                                               children: [
-                                                Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  children: [
-                                                    Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Text("Zutaten:",
-                                                            style: const TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w700)),
-                                                        Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .start,
-                                                          children: List.generate(
-                                                              recipe.ingredients
-                                                                  .length,
-                                                              (index) {
-                                                            final ingredient =
-                                                                recipe.ingredients
-                                                                        .keys
-                                                                        .toList()[
-                                                                    index];
-                                                            final amount = recipe
-                                                                    .ingredients
-                                                                    .values
-                                                                    .toList()[
-                                                                index];
-
-                                                            price += ingredient
-                                                                    .price *
-                                                                amount;
-                                                            calories += ingredient
-                                                                    .calories *
-                                                                amount;
-                                                            protein += ingredient
-                                                                    .protein *
-                                                                amount;
-                                                            carbohydrates +=
-                                                                ingredient
-                                                                        .carboHydrates *
-                                                                    amount;
-                                                            return Text(
-                                                                "${ingredient.name}, ${amount} ${ingredient.unit}");
-                                                          }),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    const SizedBox(
-                                                      height: 40,
-                                                    ),
-                                                    Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Text("Informationen:",
-                                                            style: const TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w700)),
-                                                        Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            Text(
-                                                                "Kalorien: ${calories} kcal"),
-                                                            Text(
-                                                                "Protein: ${protein}g"),
-                                                            Text(
-                                                                "Kohlenhydrate: ${carbohydrates}g"),
-                                                            Text(
-                                                              "Preis: ${price}€",
+                                                Expanded(
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    children: [
+                                                      Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Text("Zutaten:",
                                                               style: const TextStyle(
                                                                   fontWeight:
                                                                       FontWeight
-                                                                          .w700),
-                                                            )
-                                                          ],
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ],
+                                                                          .w700)),
+                                                          Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .start,
+                                                            children: List.generate(
+                                                                recipe
+                                                                    .ingredients
+                                                                    .length,
+                                                                (index) {
+                                                              final ingredient =
+                                                                  recipe.ingredients
+                                                                          .keys
+                                                                          .toList()[
+                                                                      index];
+                                                              final amount = recipe
+                                                                      .ingredients
+                                                                      .values
+                                                                      .toList()[
+                                                                  index];
+
+                                                              price += ingredient
+                                                                      .price *
+                                                                  amount;
+                                                              calories += ingredient
+                                                                      .calories *
+                                                                  amount;
+                                                              protein += ingredient
+                                                                      .protein *
+                                                                  amount;
+                                                              carbohydrates +=
+                                                                  ingredient
+                                                                          .carboHydrates *
+                                                                      amount;
+                                                              return Text(
+                                                                  "${ingredient.name}, ${amount} ${ingredient.unit}");
+                                                            }),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      const SizedBox(
+                                                        height: 40,
+                                                      ),
+                                                      Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Text("Informationen:",
+                                                              style: const TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w700)),
+                                                          Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Text(
+                                                                  "Kalorien: ${calories} kcal"),
+                                                              Text(
+                                                                  "Protein: ${protein}g"),
+                                                              Text(
+                                                                  "Kohlenhydrate: ${carbohydrates}g"),
+                                                              Text(
+                                                                "Preis: ${price}€",
+                                                                style: const TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w700),
+                                                              )
+                                                            ],
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
+                                                const SizedBox(width: 20,),
                                                 Column(
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.start,

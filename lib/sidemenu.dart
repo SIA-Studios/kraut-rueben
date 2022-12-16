@@ -20,10 +20,9 @@ class _SideMenuState extends State<SideMenu> {
         }
       },
       items: [
-        SidebarTabItem(icon: Icons.folder_open_outlined, title: "Database"),
         SidebarTabItem(icon: Icons.category_outlined, title: "Categories"),
         SidebarTabItem(icon: Icons.description_outlined, title: "Recipes"),
-        SidebarTabItem(icon: Icons.water_drop_outlined, title: "Ingredients"),
+        SidebarTabItem(icon: Icons.inventory_outlined, title: "Stock"),
       ],
     );
   }

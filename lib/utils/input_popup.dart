@@ -8,6 +8,7 @@ class InputPopup extends StatelessWidget {
   final String initialValue;
   final ValueChanged<String>? onConfirm;
   final String? Function(String?)? validator;
+  final TextInputType? textInputType;
   final List<TextInputFormatter>? inputFormatters;
   InputPopup(
       {Key? key,
@@ -15,6 +16,7 @@ class InputPopup extends StatelessWidget {
       required this.title,
       this.onConfirm,
       this.validator,
+      this.textInputType,
       this.inputFormatters})
       : super(key: key);
 
@@ -73,6 +75,7 @@ class InputPopup extends StatelessWidget {
                                       validator: validator,
                                       inputFormatters: inputFormatters,
                                       maxLines: 1,
+                                      keyboardType: textInputType,
                                       textAlignVertical:
                                           TextAlignVertical.center,
                                       controller: textFieldController,

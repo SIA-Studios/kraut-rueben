@@ -3,14 +3,18 @@ import 'package:kraut_rueben/backend/database.dart';
 import 'package:kraut_rueben/utils/transitions.dart';
 
 Widget databaseTableEntry(
-    List<String> content,
-    BuildContext context,
-    String database,
-    int primaryKey,
-    String columnName,
-    void Function() setStateOnConfirm,
-    bool disableEditing,
-    bool isArray) {
+    {required List<String> content,
+    required BuildContext context,
+    required String database,
+    required int primaryKey,
+    required String columnName,
+    required String identifier,
+    required void Function() setStateOnConfirm,
+    required bool disableEditing,
+    required bool isArray,
+    bool? isInt,
+    bool? isDouble
+    }) {
   return GestureDetector(
     onTap: () {
       if (disableEditing) return;
@@ -27,11 +31,13 @@ Widget databaseTableEntry(
       } else {
         showInputPopup(
           title: database,
+          isDouble: isDouble,
+          isInt: isInt,
           initialValue: content[0],
           onConfirm: (value) {
             DatabaseManager.setField(
                 database,
-                "REZEPTNR",
+                identifier,
                 primaryKey.toString(),
                 value.runtimeType == int ? value : "\"$value\"",
                 columnName);

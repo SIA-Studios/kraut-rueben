@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kraut_rueben/pages/categories_page.dart';
 import 'package:kraut_rueben/pages/database_page.dart';
-import 'package:kraut_rueben/pages/ingredients_page.dart';
+import 'package:kraut_rueben/pages/stock_page.dart';
 import 'package:kraut_rueben/pages/recipes_page.dart';
 
 import 'backend/database.dart';
@@ -14,12 +14,12 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => HomePageState();
 }
 
+ConnectionStatus? status;
+
 class HomePageState extends State<HomePage> {
   Future<ConnectionStatus> _login() async {
-    bool connected = false;
-    ConnectionStatus status =
-        await DatabaseManager.connectToDatabase("tim", ")EZ[6euWtXKou2z)");
-    return status;
+    status ??= await DatabaseManager.connectToDatabase("tim", ")EZ[6euWtXKou2z)");
+    return status!;
   }
 
   @override
@@ -34,19 +34,15 @@ class HomePageState extends State<HomePage> {
                 builder: (context, snapshot) {
                   if (snapshot.data != ConnectionStatus.success) {
                     _login();
-                    print("rendering container");
                     return Container();
                   }
-                  print(snapshot.data);
-                  print("rendering stack");
                   return IndexedStack(
                     alignment: Alignment.center,
                     index: value,
                     children: const [
-                      DatabasePage(),
                       CategoriesPage(),
                       RecipesPage(),
-                      IngredientsPage(),
+                      StockPage(),
                     ],
                   );
                 });

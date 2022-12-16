@@ -13,40 +13,46 @@ import 'package:kraut_rueben/main.dart';
 void showInputPopup(
     {required String title,
     required String initialValue,
+    bool? isInt,
+    bool? isDouble,
     ValueChanged<String>? onConfirm,
-    String? Function(String?)? validator,
     Widget? customSymbol,
-    List<TextInputFormatter>? inputFormatters}) {
-  navigatorKey.currentState?.push(
-      PageRouteBuilder(
-        opaque: false,
-        transitionDuration: const Duration(milliseconds: 200),
-        pageBuilder: (context, animation, secondaryAnimation) => InputPopup(
-          title: title,
-          initialValue: initialValue,
-          onConfirm: onConfirm,
-          validator: validator,
-          inputFormatters: inputFormatters,
-        ),
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          const curve = Cubic(0, 1, 0.5, 1);
-          const offsetBegin = Offset(0.0, 0.3);
-          const offsetEnd = Offset.zero;
-          const fadeBegin = 0.0;
-          const fadeEnd = 1.0;
-          final offsetTween = Tween(begin: offsetBegin, end: offsetEnd)
-              .chain(CurveTween(curve: curve));
-          final fadeTween = Tween(begin: fadeBegin, end: fadeEnd)
-              .chain(CurveTween(curve: curve));
-          final offsetAnimation = animation.drive(offsetTween);
-          final fadeAnimation = animation.drive(fadeTween);
+    }) {
+  navigatorKey.currentState?.push(PageRouteBuilder(
+    opaque: false,
+    transitionDuration: const Duration(milliseconds: 200),
+    pageBuilder: (context, animation, secondaryAnimation) => InputPopup(
+      title: title,
+      initialValue: initialValue,
+      onConfirm: (value) {
+        if (isInt ?? false) {
+          onConfirm?.call(int.parse(value).clamp(0, 2147483647).toString());
+        }
+        else {
+          onConfirm?.call(value);
+        }
+      },
+      inputFormatters: [(isInt ?? false) ? FilteringTextInputFormatter.allow(RegExp(r'[0-9]')) : (isDouble ?? false) ? FilteringTextInputFormatter.deny(RegExp(r'[0-9,]')) : FilteringTextInputFormatter.deny(RegExp(r'[]'))],
+    ),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      const curve = Cubic(0, 1, 0.5, 1);
+      const offsetBegin = Offset(0.0, 1);
+      const offsetEnd = Offset.zero;
+      const fadeBegin = 0.0;
+      const fadeEnd = 1.0;
+      final offsetTween = Tween(begin: offsetBegin, end: offsetEnd)
+          .chain(CurveTween(curve: curve));
+      final fadeTween =
+          Tween(begin: fadeBegin, end: fadeEnd).chain(CurveTween(curve: curve));
+      final offsetAnimation = animation.drive(offsetTween);
+      //final fadeAnimation = animation.drive(fadeTween);
 
-          return SlideTransition(
-            position: offsetAnimation,
-            child: FadeTransition(opacity: fadeAnimation, child: child),
-          );
-        },
-      ));
+      return SlideTransition(
+          position: offsetAnimation,
+          //child: FadeTransition(opacity: fadeAnimation, child: child),
+          child: child);
+    },
+  ));
 }
 
 void showInputArrayPopup(
@@ -56,37 +62,35 @@ void showInputArrayPopup(
     String? Function(String?)? validator,
     Widget? customSymbol,
     List<TextInputFormatter>? inputFormatters}) {
-  navigatorKey.currentState?.push(
-      PageRouteBuilder(
-        opaque: false,
-        transitionDuration: const Duration(milliseconds: 200),
-        pageBuilder: (context, animation, secondaryAnimation) =>
-            InputArrayPopup(
-          title: title,
-          initialValue: initialValue,
-          onConfirm: onConfirm,
-          validator: validator,
-          inputFormatters: inputFormatters,
-        ),
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          const curve = Cubic(0, 1, 0.5, 1);
-          const offsetBegin = Offset(0.0, 0.3);
-          const offsetEnd = Offset.zero;
-          const fadeBegin = 0.0;
-          const fadeEnd = 1.0;
-          final offsetTween = Tween(begin: offsetBegin, end: offsetEnd)
-              .chain(CurveTween(curve: curve));
-          final fadeTween = Tween(begin: fadeBegin, end: fadeEnd)
-              .chain(CurveTween(curve: curve));
-          final offsetAnimation = animation.drive(offsetTween);
-          final fadeAnimation = animation.drive(fadeTween);
+  navigatorKey.currentState?.push(PageRouteBuilder(
+    opaque: false,
+    transitionDuration: const Duration(milliseconds: 200),
+    pageBuilder: (context, animation, secondaryAnimation) => InputArrayPopup(
+      title: title,
+      initialValue: initialValue,
+      onConfirm: onConfirm,
+      validator: validator,
+      inputFormatters: inputFormatters,
+    ),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      const curve = Cubic(0, 1, 0.5, 1);
+      const offsetBegin = Offset(0.0, 1);
+      const offsetEnd = Offset.zero;
+      const fadeBegin = 0.0;
+      const fadeEnd = 1.0;
+      final offsetTween = Tween(begin: offsetBegin, end: offsetEnd)
+          .chain(CurveTween(curve: curve));
+      final fadeTween =
+          Tween(begin: fadeBegin, end: fadeEnd).chain(CurveTween(curve: curve));
+      final offsetAnimation = animation.drive(offsetTween);
+      //final fadeAnimation = animation.drive(fadeTween);
 
-          return SlideTransition(
-            position: offsetAnimation,
-            child: FadeTransition(opacity: fadeAnimation, child: child),
-          );
-        },
-      ));
+      return SlideTransition(
+          position: offsetAnimation,
+          //child: FadeTransition(opacity: fadeAnimation, child: child),
+          child: child);
+    },
+  ));
 }
 
 void Function() showPopupWidget(
@@ -105,7 +109,7 @@ void showLoginPopup() {
     pageBuilder: (context, animation, secondaryAnimation) => LoginPopup(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       const curve = Cubic(0, 1, 0.5, 1);
-      const offsetBegin = Offset(0.0, 0.3);
+      const offsetBegin = Offset(0.0, 1);
       const offsetEnd = Offset.zero;
       const fadeBegin = 0.0;
       const fadeEnd = 1.0;
@@ -114,12 +118,12 @@ void showLoginPopup() {
       final fadeTween =
           Tween(begin: fadeBegin, end: fadeEnd).chain(CurveTween(curve: curve));
       final offsetAnimation = animation.drive(offsetTween);
-      final fadeAnimation = animation.drive(fadeTween);
+      //final fadeAnimation = animation.drive(fadeTween);
 
       return SlideTransition(
-        position: offsetAnimation,
-        child: FadeTransition(opacity: fadeAnimation, child: child),
-      );
+          position: offsetAnimation,
+          //child: FadeTransition(opacity: fadeAnimation, child: child),
+          child: child);
     },
   ));
 }

@@ -70,6 +70,18 @@ class DatabaseManager {
     return customers;
   }
 
+  static Future<List<Ingredient>> getIngredients() async {
+    final List<Ingredient> ingredients = [];
+    if (_connection == null) return ingredients;
+
+    final results = await _connection!.query("SELECT * FROM ZUTAT");
+    for (final result in results) {
+      ingredients.add(Ingredient.fromResultRow(
+          result, await _getIntolerancesByIngredient(result["ZUTATENNR"])));
+    }
+    return ingredients;
+  }
+
   static Future<Intolerance?> getIntolerance(int intoleranceId) async {
     if (_intoleranceCache.containsKey(intoleranceId)) {
       return _intoleranceCache[intoleranceId];
@@ -86,7 +98,7 @@ class DatabaseManager {
     return intolerance;
   }
 
-  static Future<List<Intolerance>> _getIntolerancesByIngeredient(
+  static Future<List<Intolerance>> _getIntolerancesByIngredient(
       int ingredientId) async {
     final List<Intolerance> intolerances = [];
     if (_connection == null) return intolerances;
@@ -115,7 +127,7 @@ class DatabaseManager {
         .query("SELECT * FROM ZUTAT WHERE ZUTATENNR = ?", [ingredientId]);
     if (result.isEmpty) return null;
 
-    final intolerances = await _getIntolerancesByIngeredient(ingredientId);
+    final intolerances = await _getIntolerancesByIngredient(ingredientId);
     final ingredient = Ingredient.fromResultRow(result.first, intolerances);
     _ingredientCache[ingredientId] = ingredient;
 
