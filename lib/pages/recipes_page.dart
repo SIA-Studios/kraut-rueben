@@ -2,8 +2,10 @@ import 'package:dropdown_button2/custom_dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kraut_rueben/backend/database.dart';
+import 'package:kraut_rueben/main.dart';
 import 'package:kraut_rueben/models/ingredient.dart';
 import 'package:kraut_rueben/pages/page.dart';
+import 'package:kraut_rueben/utils/recipe_popup.dart';
 
 import '../models/recipe.dart';
 import '../utils/table.dart';
@@ -20,7 +22,6 @@ class _RecipesPageState extends ContentPageState {
     'recipeId',
     'ingredients',
     'content',
-    'ingredientsAmount'
   ];
 
   String selectedValue1 = 'recipeId';
@@ -32,18 +33,50 @@ class _RecipesPageState extends ContentPageState {
   @override
   Future<Widget?> get content => createDataTable();
 
+  void openRecipe(Recipe recipe) {
+    navigatorKey.currentState?.push(PageRouteBuilder(
+        opaque: false,
+        transitionDuration: const Duration(milliseconds: 200),
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            RecipePopup(recipe: recipe),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          const curve = Cubic(0, 1, 0.5, 1);
+          const offsetBegin = Offset(0.0, 0.3);
+          const offsetEnd = Offset.zero;
+          const fadeBegin = 0.0;
+          const fadeEnd = 1.0;
+          final offsetTween = Tween(begin: offsetBegin, end: offsetEnd)
+              .chain(CurveTween(curve: curve));
+          final fadeTween = Tween(begin: fadeBegin, end: fadeEnd)
+              .chain(CurveTween(curve: curve));
+          final offsetAnimation = animation.drive(offsetTween);
+          final fadeAnimation = animation.drive(fadeTween);
+
+          return SlideTransition(
+            position: offsetAnimation,
+            child: FadeTransition(opacity: fadeAnimation, child: child),
+          );
+        }));
+  }
+
   Future<DataTable> createDataTable() async {
     List<DataRow> recipeRows = [];
     List<DataCell> titles = [];
     List<DataCell> contents = [];
     List<DataCell> recipeIds = [];
     List<DataCell> ingredients = [];
-    List<DataCell> ingredientsAmount = [];
 
     var x = await DatabaseManager.getRecipes().then((recipes) {
       recipes.asMap().forEach((index, recipe) {
-        titles.add(DataCell(databaseTableEntry([recipe.title], context,
-            "REZEPT", recipe.recipeId, "TITEL", () => setState(() {}), false, false)));
+        titles.add(DataCell(databaseTableEntry(
+            [recipe.title],
+            context,
+            "REZEPT",
+            recipe.recipeId,
+            "TITEL",
+            () => setState(() {}),
+            false,
+            false)));
         contents.add(DataCell(databaseTableEntry(
             [recipe.content],
             context,
@@ -65,7 +98,8 @@ class _RecipesPageState extends ContentPageState {
 
         List<String> ingrendientNames = [];
         recipe.ingredients.keys.forEach((element) {
-          ingrendientNames.add(element.name);
+          ingrendientNames.add(
+              "${element.name} (${recipe.ingredients[element]} ${element.unit})");
         });
 
         ingredients.add(DataCell(databaseTableEntry(
@@ -91,9 +125,6 @@ class _RecipesPageState extends ContentPageState {
           case 'content':
             item1 = contents[index];
             break;
-          case 'ingredientsAmount':
-            item1 = ingredientsAmount[index];
-            break;
         }
 
         switch (selectedValue2) {
@@ -106,17 +137,25 @@ class _RecipesPageState extends ContentPageState {
           case 'content':
             item2 = contents[index];
             break;
-          case 'ingredientsAmount':
-            item2 = ingredientsAmount[index];
-            break;
         }
 
-        recipeRows.add(DataRow(cells: [titles[index], item1, item2]));
+        recipeRows.add(DataRow(cells: [
+          DataCell(GestureDetector(
+              onTap: () => openRecipe(recipe),
+              child: Icon(
+                Icons.open_in_new_outlined,
+                size: 20,
+              ))),
+          titles[index],
+          item1,
+          item2
+        ]));
       });
     });
 
     return DataTable(
       columns: [
+        DataColumn(label: Container()),
         const DataColumn(label: Text("title")),
         DataColumn(
             label: CustomDropdownButton2(
