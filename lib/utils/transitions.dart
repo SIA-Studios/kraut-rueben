@@ -28,7 +28,7 @@ void showInputPopup({
       initialValue: initialValue,
       onConfirm: (value) {
         if (isInt ?? false) {
-          onConfirm?.call(int.parse(value).clamp(0, 2147483647).toString());
+          onConfirm?.call(double.parse(value).clamp(0, 2147483647).toInt().toString());
         } else {
           onConfirm?.call(value);
         }

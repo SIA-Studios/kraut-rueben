@@ -73,7 +73,11 @@ class _IngredientsInputArrayPopupState
           }),
           onRemove: (i) {
             setState(() {
-              dropDownButtons.removeWhere((element) => element.index == i);
+              int indexWhere =
+                  dropDownButtons.indexWhere((element) => element.index == i);
+              selectedValue.removeAt(indexWhere);
+              dropDownButtons.removeAt(indexWhere);
+              print(selectedValue.toList());
             });
           },
         ));
@@ -84,7 +88,7 @@ class _IngredientsInputArrayPopupState
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width * 0.6;
+    double width = (MediaQuery.of(context).size.width * 0.6).clamp(0, 500);
     List<String> allIngredientsNames = [];
     widget.allIngredients.forEach((element) {
       allIngredientsNames.add(element.name);
@@ -243,16 +247,31 @@ class _IngredientsInputArrayPopupState
                                                 GestureDetector(
                                                   onTap: () {
                                                     setState(() {
-                                                      if (addTextEditingController
-                                                          .text.isEmpty) {
+                                                      if (selectedValue.contains(
+                                                              addSelectedValue) ||
+                                                          addTextEditingController
+                                                              .text.isEmpty ||
+                                                          double.parse(
+                                                                      addTextEditingController
+                                                                          .text)
+                                                                  .clamp(0,
+                                                                      2147483647)
+                                                                  .toInt() ==
+                                                              0) {
                                                         return;
                                                       }
                                                       TextEditingController
                                                           textFieldController =
                                                           TextEditingController(
-                                                              text:
-                                                                  addTextEditingController
-                                                                      .text);
+                                                              text: double.parse(
+                                                                      addTextEditingController
+                                                                          .text)
+                                                                  .clamp(0,
+                                                                      2147483647)
+                                                                  .toInt()
+                                                                  .toString());
+                                                      selectedValue.add(
+                                                          addSelectedValue);
                                                       dropDownButtons.add(
                                                           InputArrayDropdownButton(
                                                         controller:
@@ -273,12 +292,20 @@ class _IngredientsInputArrayPopupState
                                                         }),
                                                         onRemove: (i) {
                                                           setState(() {
-                                                            dropDownButtons
-                                                                .removeWhere(
+                                                            int indexWhere =
+                                                                dropDownButtons.indexWhere(
                                                                     (element) =>
                                                                         element
                                                                             .index ==
                                                                         i);
+                                                            selectedValue
+                                                                .removeAt(
+                                                                    indexWhere);
+                                                            dropDownButtons
+                                                                .removeAt(
+                                                                    indexWhere);
+                                                            print(selectedValue
+                                                                .toList());
                                                           });
                                                         },
                                                       ));
@@ -355,8 +382,7 @@ class _IngredientsInputArrayPopupState
                                             .validate()) {
                                           return;
                                         }
-                                        Map<String, String> outputList =
-                                            <String, String>{};
+                                        Map<String, String> outputList = {};
                                         for (InputArrayDropdownButton field
                                             in dropDownButtons) {
                                           Ingredient ingredient = widget
@@ -372,11 +398,6 @@ class _IngredientsInputArrayPopupState
                                               dropDownButtons[index]
                                                   .controller
                                                   .text;
-                                          print(ingredient.ingredientId
-                                              .toString());
-                                          print(outputList[ingredient
-                                              .ingredientId
-                                              .toString()]);
                                         }
                                         widget.onConfirm?.call(outputList);
                                         Navigator.pop(context);
@@ -571,7 +592,9 @@ class _InputArrayDropdownButtonState extends State<InputArrayDropdownButton> {
             width: 7,
           ),
           GestureDetector(
-            onTap: () => widget.onRemove.call(widget.index),
+            onTap: () {
+              widget.onRemove.call(widget.index);
+            },
             child: CircleAvatar(
               radius: 8,
               backgroundColor: Colors.white.withOpacity(0.4),

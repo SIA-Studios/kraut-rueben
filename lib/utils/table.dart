@@ -29,16 +29,15 @@ Widget databaseTableEntry(
             initialValue: content,
             initialValue2: content2,
             onConfirm: (value) {
-
+              print("update database");
+              DatabaseManager.setIngredientsForRecipe(value);
             },
           );
         } else {
           showInputArrayPopup(
             title: database,
             initialValue: content,
-            onConfirm: (value) {
-              
-            },
+            onConfirm: (value) {},
           );
         }
       } else {

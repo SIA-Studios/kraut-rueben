@@ -219,6 +219,17 @@ class DatabaseManager {
         "UPDATE $database SET $columnName = $newValue WHERE $identifier = $identifierValue");
   }
 
+  static Future<void> setIngredientsForRecipe(
+      Map<String, String> ingredient) async {
+    if (_connection == null) return;
+    ingredient.forEach((ingredientId, amount) {
+      print(ingredientId);
+      print(amount);
+      _connection!.query("UPDATE REZEPTZUTAT SET MENGE = ? WHERE ZUTATENNR = ?",
+          [int.parse(amount), int.parse(ingredientId)]);
+    });
+  }
+
   static Future<Results?> executeSQLStatement(String statement,
       [List<Object>? values]) async {
     if (_connection == null) return null;
