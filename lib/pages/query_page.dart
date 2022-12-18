@@ -12,23 +12,64 @@ class QueryPage extends ContentPage {
 
 class _QueryPageState extends ContentPageState {
   @override
-  String? get title => "Categories";
+  String? get title => "Query";
 
   @override
   Future<Widget?> get content => contentWidget();
 
+  String errorMessage = "";
+  List<DataColumn> columns = [];
+  List<DataRow> rows = [];
+  bool hasResult = false;
+
+  TextEditingController queryFieldController = TextEditingController();
+
+  Future<void> _executeStatement(String statement) async {
+    String query = queryFieldController.text;
+    setState(() {
+      hasResult = false;
+      errorMessage = "";
+    });
+    columns = [];
+    rows = [];
+    final result = await DatabaseManager.executeSQLStatement(statement);
+    if (result is Exception) {
+      return setState(() {
+        errorMessage = result.toString();
+      });
+    }
+    if (result == null) return;
+
+    result.fields.forEach((field) => {
+          columns.add(DataColumn(label: Text(field.orgName!))),
+          debugPrint(field.orgName)
+        });
+    result.forEach((result) {
+      List<DataCell> cells = [];
+      result.fields.values.forEach((element) {
+        cells.add(DataCell(Text(element.toString())));
+      });
+      rows.add(DataRow(cells: cells));
+    });
+    setState(() {
+      hasResult = true;
+    });
+    queryFieldController.text = query;
+  }
+
   Future<Widget> contentWidget() async {
-    TextEditingController queryFieldController = TextEditingController();
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Row(
           children: [
             Expanded(
               child: TextField(
                 controller: queryFieldController,
-                maxLines: 1,
                 textAlignVertical: TextAlignVertical.center,
                 textAlign: TextAlign.left,
+                keyboardType: TextInputType.none,
+                maxLines: null,
                 decoration: InputDecoration(
                   hintText: "Query",
                   filled: true,
@@ -54,9 +95,7 @@ class _QueryPageState extends ContentPageState {
             GestureDetector(
               onTap: () {
                 if (queryFieldController.text != "") {
-                  DatabaseManager.executeSQLStatement(
-                      queryFieldController.text);
-                  queryFieldController.text = "";
+                  _executeStatement(queryFieldController.text);
                 }
               },
               child: const Padding(
@@ -68,7 +107,17 @@ class _QueryPageState extends ContentPageState {
               ),
             )
           ],
-        )
+        ),
+        if (hasResult) DataTable(columns: columns, rows: rows),
+        if (errorMessage != "")
+          Center(
+            child: Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Text(
+                  errorMessage,
+                  style: const TextStyle(color: Colors.red),
+                )),
+          ),
       ],
     );
   }

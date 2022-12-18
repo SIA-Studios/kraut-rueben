@@ -261,12 +261,15 @@ class DatabaseManager {
           [recipeId, ingredientId, amount]);
     });
   }
-
-  static Future<Results?> executeSQLStatement(String statement) async {
+ 
+  static Future<dynamic?> executeSQLStatement(String statement) async {
     if (_connection == null) return null;
-    print(statement);
 
-    return await _connection!.query(statement);
+    try {
+      return await _connection!.query(statement);
+    } on Exception catch (error) {
+      return Exception(error);
+    }
   }
 
   static Future<void> insertRecipe(Recipe recipe) async {
@@ -279,13 +282,9 @@ class DatabaseManager {
       final ingredient = recipe.ingredients.keys.toList()[i];
       final amount = recipe.ingredients.values.toList()[i];
 
-      try {
-        await _connection!.query(
-            "INSERT INTO REZEPTZUTAT(REZEPTNR, ZUTATENNR, MENGE) VALUES (?,?,?)",
-            [recipe.recipeId, ingredient.ingredientId, amount]);
-      } catch (error) {
-        throw Exception(error);
-      }
+      await _connection!.query(
+          "INSERT INTO REZEPTZUTAT(REZEPTNR, ZUTATENNR, MENGE) VALUES (?,?,?)",
+          [recipe.recipeId, ingredient.ingredientId, amount]);
     }
   }
 

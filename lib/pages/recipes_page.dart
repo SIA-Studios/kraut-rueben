@@ -83,6 +83,7 @@ class _RecipesPageState extends ContentPageState {
             disableEditing: false,
             isArray: false)));
         contents.add(DataCell(databaseTableEntry(
+            textInputType: TextInputType.multiline,
             content: [recipe.content],
             previewText: recipe.content,
             context: context,

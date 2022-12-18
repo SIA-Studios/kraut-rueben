@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kraut_rueben/pages/privacy_page.dart';
 import 'package:kraut_rueben/pages/query_page.dart';
 import 'package:kraut_rueben/pages/database_page.dart';
 import 'package:kraut_rueben/pages/stock_page.dart';
@@ -44,6 +45,7 @@ class HomePageState extends State<HomePage> {
                       QueryPage(),
                       RecipesPage(),
                       StockPage(),
+                      PrivacyPage(),
                     ],
                   );
                 });

@@ -14,6 +14,7 @@ Widget databaseTableEntry(
     required bool disableEditing,
     required bool isArray,
     required String previewText,
+    final TextInputType? textInputType,
     List<Ingredient>? allIngredients,
     bool? isInt,
     bool? isDouble,
@@ -46,6 +47,7 @@ Widget databaseTableEntry(
           title: database,
           isDouble: isDouble,
           isInt: isInt,
+          textInputType: textInputType,
           initialValue: content[0],
           onConfirm: (value) async {
             await DatabaseManager.setField(

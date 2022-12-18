@@ -59,7 +59,6 @@ class _IngredientsInputArrayPopupState
                 widget.ingredientIds[index].toString())
             .name);
       });
-      print(selectedValues);
       widget.ingredientAmounts.asMap().forEach((index, text) {
         TextEditingController textFieldController =
             TextEditingController(text: text);

@@ -18,6 +18,7 @@ import 'package:kraut_rueben/main.dart';
 void showInputPopup({
   required String title,
   required String initialValue,
+  TextInputType? textInputType,
   bool? isInt,
   bool? isDouble,
   ValueChanged<String>? onConfirm,
@@ -29,6 +30,7 @@ void showInputPopup({
     pageBuilder: (context, animation, secondaryAnimation) => InputPopup(
       title: title,
       initialValue: initialValue,
+      textInputType: textInputType,
       onConfirm: (value) {
         if (isInt ?? false) {
           onConfirm?.call(

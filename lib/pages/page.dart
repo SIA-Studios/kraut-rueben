@@ -45,10 +45,8 @@ abstract class ContentPageState extends ConsumerState<ContentPage> {
                                 future: content,
                                 builder: (context, snapshot) {
                                   if (snapshot.data == null) {
-                                    print("rendering page container");
                                     return Container();
                                   }
-                                  print("rendering page content");
                                   return snapshot.data!;
                                 },
                               )))),

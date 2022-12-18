@@ -74,7 +74,7 @@ class InputPopup extends StatelessWidget {
                                     TextFormField(
                                       validator: validator,
                                       inputFormatters: inputFormatters,
-                                      maxLines: 1,
+                                      maxLines: null,
                                       keyboardType: textInputType,
                                       textAlignVertical:
                                           TextAlignVertical.center,
