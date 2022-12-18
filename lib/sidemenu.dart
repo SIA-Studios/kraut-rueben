@@ -39,7 +39,7 @@ class _SideMenuState extends State<SideMenu> {
             onTap: (() {
               DatabaseManager.closeConnection();
               showLoginPopup();
-              HomePage().createState();
+              MyApp.currentTab.value = 0;
             }),
             child: Container(
               height: 40,
