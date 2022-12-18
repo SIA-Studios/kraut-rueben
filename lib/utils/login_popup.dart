@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:kraut_rueben/backend/database.dart';
 
 class LoginPopup extends StatelessWidget {
-  final ValueChanged<String>? onConfirm;
+  final ValueChanged<ConnectionStatus>? onConfirm;
   LoginPopup({Key? key, this.onConfirm}) : super(key: key);
 
   final GlobalKey<FormState> _formKey = GlobalKey();
@@ -20,14 +20,6 @@ class LoginPopup extends StatelessWidget {
       child: Center(
         child: Stack(
           children: [
-            Positioned.fill(
-              child: GestureDetector(
-                onTap: () => Navigator.pop(context),
-                child: Container(
-                  color: Colors.transparent,
-                ),
-              ),
-            ),
             Positioned.fill(
               child: UnconstrainedBox(
                 child: ClipRRect(
@@ -152,24 +144,7 @@ class LoginPopup extends StatelessWidget {
                                 mainAxisSize: MainAxisSize.max,
                                 children: [
                                   SizedBox(
-                                    width: width / 2,
-                                    child: MaterialButton(
-                                      onPressed: () => Navigator.pop(context),
-                                      splashColor: Colors.transparent,
-                                      child: const Text(
-                                        "Cancel",
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    color: Colors.black.withOpacity(0.2),
-                                    width: 1,
-                                  ),
-                                  SizedBox(
-                                    width: width / 2,
+                                    width: width,
                                     child: MaterialButton(
                                       onPressed: () async {
                                         if (!_formKey.currentState!
@@ -180,8 +155,11 @@ class LoginPopup extends StatelessWidget {
                                             .connectToDatabase(
                                                 usernameController.text,
                                                 passwordController.text);
+
                                         print(status);
-                                        if (status == ConnectionStatus.success) {
+                                        if (status ==
+                                            ConnectionStatus.success) {
+                                          onConfirm?.call(status);
                                           Navigator.pop(context);
                                         }
                                       },
@@ -189,7 +167,7 @@ class LoginPopup extends StatelessWidget {
                                       child: const Text(
                                         "Confirm",
                                         style: TextStyle(
-                                          color: Colors.red,
+                                          color: Colors.black,
                                         ),
                                       ),
                                     ),

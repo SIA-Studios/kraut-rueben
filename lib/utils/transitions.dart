@@ -191,12 +191,17 @@ void Function() showPopupWidget(
       barrierColor: Colors.black.withOpacity(0.6));
 }
 
-void showLoginPopup() {
+Future<ConnectionStatus> showLoginPopup() async {
+  ConnectionStatus? status;
   print("open login popup");
-  navigatorKey.currentState?.push(PageRouteBuilder(
+  await navigatorKey.currentState?.push(PageRouteBuilder(
+    barrierDismissible: false,
     opaque: false,
     transitionDuration: const Duration(milliseconds: 200),
-    pageBuilder: (context, animation, secondaryAnimation) => LoginPopup(),
+    pageBuilder: (context, animation, secondaryAnimation) =>
+        LoginPopup(onConfirm: (value) {
+      status = value;
+    }),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       const curve = Cubic(0, 1, 0.5, 1);
       const offsetBegin = Offset(0.0, 1);
@@ -216,4 +221,5 @@ void showLoginPopup() {
           child: child);
     },
   ));
+  return status!;
 }

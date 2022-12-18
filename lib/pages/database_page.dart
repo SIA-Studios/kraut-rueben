@@ -34,9 +34,8 @@ class _DatabasePageState extends ContentPageState {
   Future<Widget> contentWidget() async {
     return DataTable(
       columns: [
-        DataColumn(
-            label: GestureDetector(
-                onTap: () => showLoginPopup(), child: Text("title"))),
+        const DataColumn(
+            label: Text("title")),
         DataColumn(
             label: CustomDropdownButton2(
           key: const Key("dropdownButton1"),

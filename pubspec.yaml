@@ -41,6 +41,7 @@ dependencies:
   mysql1: ^0.20.0
   dyn_mouse_scroll: ^1.0.7
   dropdown_button2: ^1.9.2
+  flutter_phoenix: ^1.1.0
 
 dev_dependencies:
   flutter_test:
