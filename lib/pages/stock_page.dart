@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kraut_rueben/backend/database.dart';
 import 'package:kraut_rueben/models/ingredient.dart';
+import 'package:kraut_rueben/models/supplier.dart';
 import 'package:kraut_rueben/pages/page.dart';
 
 import '../utils/table.dart';
@@ -73,13 +74,40 @@ class _StockPageState extends ContentPageState {
       },
     );
 
-    return DataTable(
-      columns: [
-        const DataColumn(label: Text("title")),
-        const DataColumn(label: Text("id")),
-        DataColumn(label: Text("stock")),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Center(
+          child: GestureDetector(
+            onTap: (() async {
+              List<Supplier> allSuppliers =
+                  await DatabaseManager.getSuppliers();
+              showAddIngredientPopup(allSuppliers: allSuppliers);
+            }),
+            child: Container(
+              padding: EdgeInsets.all(7),
+              margin: EdgeInsets.all(10),
+              decoration:
+                  BoxDecoration(shape: BoxShape.circle, color: Colors.white24),
+              child: Icon(
+                Icons.add,
+                size: 25,
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(
+          height: 20,
+        ),
+        DataTable(
+          columns: [
+            const DataColumn(label: Text("title")),
+            const DataColumn(label: Text("id")),
+            DataColumn(label: Text("stock")),
+          ],
+          rows: ingredientRows,
+        ),
       ],
-      rows: ingredientRows,
     );
   }
 }

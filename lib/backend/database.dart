@@ -1,5 +1,6 @@
 import 'dart:core';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:kraut_rueben/models/category.dart';
@@ -8,6 +9,7 @@ import 'package:kraut_rueben/models/ingredient.dart';
 import 'package:kraut_rueben/models/intolerance.dart';
 import 'package:kraut_rueben/models/order.dart';
 import 'package:kraut_rueben/models/recipe.dart';
+import 'package:kraut_rueben/models/supplier.dart';
 import 'package:mysql1/mysql1.dart';
 
 class DatabaseManager {
@@ -82,6 +84,17 @@ class DatabaseManager {
           result, await _getIntolerancesByIngredient(result["ZUTATENNR"])));
     }
     return ingredients;
+  }
+
+  static Future<List<Supplier>> getSuppliers() async {
+    final List<Supplier> suppliers = [];
+    if (_connection == null) return suppliers;
+
+    final results = await _connection!.query("SELECT * FROM LIEFERANT");
+    for (final result in results) {
+      suppliers.add(Supplier.fromResultRow(result));
+    }
+    return suppliers;
   }
 
   static Future<Intolerance?> getIntolerance(int intoleranceId) async {
@@ -215,26 +228,45 @@ class DatabaseManager {
 
   static Future<void> setField(String database, String identifier,
       String identifierValue, String newValue, String columnName) async {
-    _connection!.query(
+    await _connection!.query(
         "UPDATE $database SET $columnName = $newValue WHERE $identifier = $identifierValue");
   }
 
+  static Future<void> addIngredient(name, unit, price, stock, supplierId,
+      calories, carbohydrates, protein) async {
+    int ingredientId = Random().nextInt(100001);
+    await _connection!.query(
+        "INSERT INTO ZUTAT(ZUTATENNR, BEZEICHNUNG, EINHEIT, NETTOPREIS, BESTAND, LIEFERANT, KALORIEN, KOHLENHYDRATE, PROTEIN) VALUES (?,?,?,?,?,?,?,?,?)",
+        [
+          ingredientId.toString(),
+          name,
+          unit,
+          price,
+          stock,
+          supplierId,
+          calories,
+          carbohydrates,
+          protein
+        ]);
+  }
+
   static Future<void> setIngredientsForRecipe(
-      Map<String, String> ingredient) async {
+      Map<String, String> ingredient, String recipeId) async {
     if (_connection == null) return;
-    ingredient.forEach((ingredientId, amount) {
-      print(ingredientId);
-      print(amount);
-      _connection!.query("UPDATE REZEPTZUTAT SET MENGE = ? WHERE ZUTATENNR = ?",
-          [int.parse(amount), int.parse(ingredientId)]);
+    await _connection!
+        .query("DELETE FROM REZEPTZUTAT WHERE REZEPTNR = ?", [recipeId]);
+    ingredient.forEach((ingredientId, amount) async {
+      await _connection!.query(
+          "INSERT INTO REZEPTZUTAT(REZEPTNR, ZUTATENNR, MENGE) VALUES (?,?,?)",
+          [recipeId, ingredientId, amount]);
     });
   }
 
-  static Future<Results?> executeSQLStatement(String statement,
-      [List<Object>? values]) async {
+  static Future<Results?> executeSQLStatement(String statement) async {
     if (_connection == null) return null;
+    print(statement);
 
-    return await _connection!.query(statement, values);
+    return await _connection!.query(statement);
   }
 
   static Future<void> insertRecipe(Recipe recipe) async {
@@ -247,9 +279,13 @@ class DatabaseManager {
       final ingredient = recipe.ingredients.keys.toList()[i];
       final amount = recipe.ingredients.values.toList()[i];
 
-      await _connection!.query(
-          "INSERT INTO REZEPTZUTAT(REZEPTNR, ZUTATENNR, MENGE) VALUES (?,?,?)",
-          [recipe.recipeId, ingredient.ingredientId, amount]);
+      try {
+        await _connection!.query(
+            "INSERT INTO REZEPTZUTAT(REZEPTNR, ZUTATENNR, MENGE) VALUES (?,?,?)",
+            [recipe.recipeId, ingredient.ingredientId, amount]);
+      } catch (error) {
+        throw Exception(error);
+      }
     }
   }
 

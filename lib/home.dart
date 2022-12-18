@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kraut_rueben/pages/categories_page.dart';
+import 'package:kraut_rueben/pages/query_page.dart';
 import 'package:kraut_rueben/pages/database_page.dart';
 import 'package:kraut_rueben/pages/stock_page.dart';
 import 'package:kraut_rueben/pages/recipes_page.dart';
@@ -18,7 +18,8 @@ ConnectionStatus? status;
 
 class HomePageState extends State<HomePage> {
   Future<ConnectionStatus> _login() async {
-    status ??= await DatabaseManager.connectToDatabase("tim", ")EZ[6euWtXKou2z)");
+    status ??=
+        await DatabaseManager.connectToDatabase("tim", ")EZ[6euWtXKou2z)");
     return status!;
   }
 
@@ -40,7 +41,7 @@ class HomePageState extends State<HomePage> {
                     alignment: Alignment.center,
                     index: value,
                     children: const [
-                      CategoriesPage(),
+                      QueryPage(),
                       RecipesPage(),
                       StockPage(),
                     ],

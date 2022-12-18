@@ -23,14 +23,15 @@ Widget databaseTableEntry(
       if (disableEditing) return;
       if (isArray) {
         if (content2 != null && allIngredients != null) {
-          showMultiInputArrayPopup(
+          showIngredientsInputArrayPopup(
             title: database,
             allIngredients: allIngredients,
             initialValue: content,
             initialValue2: content2,
-            onConfirm: (value) {
-              print("update database");
-              DatabaseManager.setIngredientsForRecipe(value);
+            onConfirm: (value) async {
+              await DatabaseManager.setIngredientsForRecipe(
+                  value, primaryKey.toString());
+              setStateOnConfirm();
             },
           );
         } else {
@@ -46,8 +47,8 @@ Widget databaseTableEntry(
           isDouble: isDouble,
           isInt: isInt,
           initialValue: content[0],
-          onConfirm: (value) {
-            DatabaseManager.setField(
+          onConfirm: (value) async {
+            await DatabaseManager.setField(
                 database,
                 identifier,
                 primaryKey.toString(),
