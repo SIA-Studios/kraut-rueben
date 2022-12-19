@@ -21,9 +21,10 @@ class DatabaseManager {
   static final Map<int, Category> _categoryCache = {};
 
   static Future<ConnectionStatus> connectToDatabase(
-      String user, String password) async {
+      String user, String password,
+      [String? ipAddress]) async {
     final settings = ConnectionSettings(
-        host: '130.162.243.109',
+        host: ipAddress ?? '130.162.243.109',
         port: 3306,
         user: user,
         password: password,
