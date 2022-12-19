@@ -22,13 +22,13 @@ class DatabaseManager {
 
   static Future<ConnectionStatus> connectToDatabase(
       String user, String password,
-      [String? ipAddress]) async {
+      [String? ipAddress, int? port, String? database]) async {
     final settings = ConnectionSettings(
         host: ipAddress ?? '130.162.243.109',
-        port: 3306,
+        port: port ?? 3306,
         user: user,
         password: password,
-        db: 'krautundrueben');
+        db: database ?? 'krautundrueben');
 
     try {
       connection = await MySqlConnection.connect(settings);
