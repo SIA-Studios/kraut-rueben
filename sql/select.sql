@@ -21,6 +21,14 @@ SELECT DISTINCT REZEPT.TITEL, REZEPT.INHALT, KATEGORIE.name FROM REZEPT, REZEPTK
     REZEPT.REZEPTNR = REZEPTKATEGORIE.REZEPTNR 
     AND REZEPTKATEGORIE.KATEGORIENR = KATEGORIE.KATEGORIENR 
     AND (KATEGORIE.NAME = 'xxx' OR KATEGORIE.NAME = 'xxx') ;
+    
+/******************************************************************************/
+/***        Auswahl aller Rezepte, die eine bestimme Zutat enthalten        ***/
+/******************************************************************************/
+
+SELECT * FROM REZEPT WHERE REZEPTNR IN 
+   (SELECT REZEPTNR FROM REZEPTZUTAT WHERE ZUTATENNR IN 
+   (SELECT ZUTATENNR FROM ZUTAT WHERE BEZEICHNUNG = "xxx"))    
 
 /******************************************************************************/
 /***      Durchschnittliche Nährwerte aller Bestellungen eines Kunden       ***/
@@ -47,7 +55,7 @@ WHERE ZUTAT.ZUTATENNR NOT IN (SELECT BESTELLUNGZUTAT.ZUTATENNR FROM BESTELLUNGZU
 SELECT * FROM
     (SELECT R.TITEL, SUM(Z.KALORIEN * RZ.MENGE) AS Kaloriensumme FROM REZEPT AS R
     JOIN REZEPTZUTAT AS RZ
-    ON R.REZEPTNR = rz.REZEPTNR
+    ON R.REZEPTNR = RZ.REZEPTNR
     JOIN ZUTAT AS Z
     ON Z.ZUTATENNR = RZ.ZUTATENNR
     GROUP BY R.REZEPTNR) KALORIEN
