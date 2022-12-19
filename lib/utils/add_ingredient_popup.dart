@@ -205,6 +205,10 @@ class _AddIngredientPopupState extends State<AddIngredientPopup> {
                                           TextAlignVertical.center,
                                       controller: priceTextController,
                                       textAlign: TextAlign.left,
+                                      inputFormatters: [
+                                        FilteringTextInputFormatter.allow(
+                                            RegExp(r'[0-9.]'))
+                                      ],
                                       onChanged: (value) =>
                                           _formKey.currentState!.validate(),
                                       decoration: InputDecoration(
@@ -239,6 +243,10 @@ class _AddIngredientPopupState extends State<AddIngredientPopup> {
                                       textAlignVertical:
                                           TextAlignVertical.center,
                                       controller: stockTextController,
+                                      inputFormatters: [
+                                        FilteringTextInputFormatter.allow(
+                                            RegExp(r'[0-9]'))
+                                      ],
                                       textAlign: TextAlign.left,
                                       onChanged: (value) =>
                                           _formKey.currentState!.validate(),
@@ -277,6 +285,10 @@ class _AddIngredientPopupState extends State<AddIngredientPopup> {
                                       textAlign: TextAlign.left,
                                       onChanged: (value) =>
                                           _formKey.currentState!.validate(),
+                                      inputFormatters: [
+                                        FilteringTextInputFormatter.allow(
+                                            RegExp(r'[0-9]'))
+                                      ],
                                       decoration: InputDecoration(
                                         hintText: "Calories",
                                         filled: true,
@@ -312,6 +324,10 @@ class _AddIngredientPopupState extends State<AddIngredientPopup> {
                                       textAlign: TextAlign.left,
                                       onChanged: (value) =>
                                           _formKey.currentState!.validate(),
+                                      inputFormatters: [
+                                        FilteringTextInputFormatter.allow(
+                                            RegExp(r'[0-9.]'))
+                                      ],
                                       decoration: InputDecoration(
                                         hintText: "Carbohydrates",
                                         filled: true,
@@ -344,6 +360,10 @@ class _AddIngredientPopupState extends State<AddIngredientPopup> {
                                       textAlignVertical:
                                           TextAlignVertical.center,
                                       controller: proteinTextController,
+                                      inputFormatters: [
+                                        FilteringTextInputFormatter.allow(
+                                            RegExp(r'[0-9.]'))
+                                      ],
                                       textAlign: TextAlign.left,
                                       onChanged: (value) =>
                                           _formKey.currentState!.validate(),
