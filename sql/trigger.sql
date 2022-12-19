@@ -1,4 +1,4 @@
-USE krautundrueben;KUNDE
+USE krautundrueben;
 
 /******************************************************************************/
 /***                        Trigger Kunden Tabelle                          ***/
