@@ -43,16 +43,16 @@ class _AddIngredientPopupState extends State<AddIngredientPopup> {
 
   final GlobalKey<FormState> _formKey = GlobalKey();
 
+  TextEditingController nameTextController = TextEditingController();
+  TextEditingController unitTextController = TextEditingController();
+  TextEditingController priceTextController = TextEditingController();
+  TextEditingController stockTextController = TextEditingController();
+  TextEditingController caloriesTextController = TextEditingController();
+  TextEditingController carbohydratesTextController = TextEditingController();
+  TextEditingController proteinTextController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
-    TextEditingController nameTextController = TextEditingController();
-    TextEditingController unitTextController = TextEditingController();
-    TextEditingController priceTextController = TextEditingController();
-    TextEditingController stockTextController = TextEditingController();
-    TextEditingController caloriesTextController = TextEditingController();
-    TextEditingController carbohydratesTextController = TextEditingController();
-    TextEditingController proteinTextController = TextEditingController();
-
     double width = 300;
 
     return Material(

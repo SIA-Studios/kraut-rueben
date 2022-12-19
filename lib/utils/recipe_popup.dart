@@ -176,13 +176,13 @@ class RecipePopup extends StatelessWidget {
                                                                     .start,
                                                             children: [
                                                               Text(
-                                                                  "Kalorien: ${calories} kcal"),
+                                                                  "Kalorien: ${calories.toStringAsFixed(1)} kcal"),
                                                               Text(
-                                                                  "Protein: ${protein}g"),
+                                                                  "Protein: ${protein.toStringAsFixed(1)}g"),
                                                               Text(
-                                                                  "Kohlenhydrate: ${carbohydrates}g"),
+                                                                  "Kohlenhydrate: ${carbohydrates.toStringAsFixed(1)}g"),
                                                               Text(
-                                                                "Preis: ${price}€",
+                                                                "Preis: ${price.toStringAsFixed(2)}€",
                                                                 style: const TextStyle(
                                                                     fontWeight:
                                                                         FontWeight
@@ -195,7 +195,9 @@ class RecipePopup extends StatelessWidget {
                                                     ],
                                                   ),
                                                 ),
-                                                const SizedBox(width: 20,),
+                                                const SizedBox(
+                                                  width: 20,
+                                                ),
                                                 Column(
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.start,
