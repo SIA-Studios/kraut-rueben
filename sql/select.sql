@@ -1,5 +1,5 @@
 /******************************************************************************/
-/***                              Rezept Kategorie                          ***/
+/***                        Rezepte nach Kategorie                          ***/
 /******************************************************************************/
 
 /* 1 Kategorie */
@@ -19,7 +19,7 @@ SELECT DISTINCT REZEPT.titel, REZEPT.inhalt, KATEGORIE.name FROM REZEPT, REZEPTK
     AND (KATEGORIE.kategorienr = 000 OR KATEGORIE.kategorienr = 000 OR KATEGORIE.kategorienr = 000) 
 
 /******************************************************************************/
-/***                              Rezept Unverträglichkeit                  ***/
+/***                       Rezepte nach Unverträglichkeit                   ***/
 /******************************************************************************/
 
 /* 1 Unverträglichkeit */
@@ -47,7 +47,7 @@ SELECT DISTINCT REZEPT.titel, REZEPT.inhalt FROM REZEPT, REZEPTZUTAT, ZUTATUNVER
     AND UNVERTRAEGLICHKEIT.unvernr != 000)  
 
 /******************************************************************************/
-/***                              Beides                                    ***/
+/***                                Beides                                  ***/
 /******************************************************************************/
 
 /* 1 Unverträglichkeit, 1 Kategorie */
@@ -91,11 +91,90 @@ SELECT DISTINCT REZEPT.titel, REZEPT.inhalt FROM REZEPT, REZEPTZUTAT, ZUTATUNVER
     AND (KATEGORIE.kategorienr = 000 OR KATEGORIE.kategorienr = 000))
 
 /******************************************************************************/
-/***                              Rezept Zutaten                            ***/
+/***                      Alle Zutaten nach Rezeptname                      ***/
 /******************************************************************************/
 
 SELECT ZUTAT.bezeichnung, ZUTAT.einheit, ZUTAT.nettopreis, ZUTAT.kalorien, ZUTAT.kohlenhydrate, ZUTAT.protein
     FROM REZEPT, ZUTAT, REZEPTZUTAT 
     WHERE ZUTAT.zutatennr = REZEPTZUTAT.zutatennr 
     AND REZEPTZUTAT.rezeptnr = REZEPT.rezeptnr
-    AND REZEPT.rezeptnr = 000
+    AND REZEPT.rezeptnr IN
+    (SELECT REZEPTNR FROM REZEPT WHERE TITEL = "Kaiserschmarrn")
+
+/******************************************************************************/
+/***      Durchschnittliche Nährwerte aller Bestellungen eines Kunden       ***/
+/******************************************************************************/
+
+SELECT KUNDE.KUNDENNR, KUNDE.VORNAME, KUNDE.NACHNAME, AVG(ZUTAT.KALORIEN) AS Kaloriendurchschnitt, AVG(ZUTAT.KOHLENHYDRATE) AS Kohlenhydratedurchschnitt, AVG(ZUTAT.PROTEIN) AS Proteindurchschnitt
+    FROM ZUTAT
+    LEFT JOIN BESTELLUNGZUTAT ON ZUTAT.ZUTATENNR = BESTELLUNGZUTAT.ZUTATENNR
+    LEFT JOIN BESTELLUNG ON BESTELLUNGZUTAT.BESTELLNR = BESTELLUNG.BESTELLNR
+    LEFT JOIN KUNDE ON BESTELLUNG.KUNDENNR = KUNDE.KUNDENNR
+    WHERE KUNDE.KUNDENNR = 000
+
+/******************************************************************************/
+/***               Zutaten, die keinem Rezept zugeordnet sind               ***/
+/******************************************************************************/
+
+SELECT * FROM ZUTAT
+WHERE ZUTAT.ZUTATENNR NOT IN (SELECT BESTELLUNGZUTAT.ZUTATENNR FROM BESTELLUNGZUTAT); 
+
+/******************************************************************************/
+/***        Alle Rezepte, die eine Kalorienmenge nicht überschreiten        ***/
+/******************************************************************************/
+
+SELECT * FROM
+    (SELECT r.TITEL, SUM(z.KALORIEN * rz.MENGE) AS Kaloriensumme FROM REZEPT AS r
+    JOIN REZEPTZUTAT AS rz
+    ON r.REZEPTNR = rz.REZEPTNR
+    JOIN ZUTAT AS z
+    ON z.ZUTATENNR = rz.ZUTATENNR
+    GROUP BY r.REZEPTNR) KALORIEN
+    WHERE Kaloriensumme < 10000
+
+/******************************************************************************/
+/***                   Rezepte mit weniger als 5 Zutaten                    ***/
+/******************************************************************************/
+
+SELECT * FROM REZEPT
+    WHERE 5 > (SELECT COUNT(*) FROM REZEPTZUTAT WHERE REZEPTZUTAT.REZEPTNR = REZEPT.REZEPTNR);
+
+/******************************************************************************/
+/***       Rezepte mit weniger als 5 Zutaten und bestimmter Kategorie       ***/
+/******************************************************************************/
+
+SELECT * FROM REZEPT
+    WHERE (5 > (SELECT COUNT(*) FROM REZEPTZUTAT WHERE REZEPTZUTAT.REZEPTNR = REZEPT.REZEPTNR))
+    AND REZEPTNR IN (SELECT REZEPTNR FROM REZEPTKATEGORIE WHERE KATEGORIENR IN (SELECT KATEGORIENR FROM KATEGORIE WHERE NAME = "Vegan"))
+
+/******************************************************************************/
+/***          Auswahl aller Zutaten eines Rezepts nach Rezeptname           ***/
+/******************************************************************************/
+
+SELECT DISTINCT REZEPT.titel, ZUTAT.bezeichnung, ZUTAT.einheit, ZUTAT.nettopreis, ZUTAT.kalorien, ZUTAT.kohlenhydrate, ZUTAT.protein
+    FROM ZUTAT
+    INNER JOIN REZEPTZUTAT ON REZEPTZUTAT.zutatennr = ZUTAT.zutatennr
+    INNER JOIN REZEPT ON REZEPT.rezeptnr = REZEPTZUTAT.rezeptnr
+    WHERE REZEPT.titel = 'xxx'
+
+/******************************************************************************/
+/***        Auswahl aller Rezepte, die eine bestimme Zutat enthalten        ***/
+/******************************************************************************/
+
+SELECT * FROM REZEPT WHERE REZEPTNR IN 
+   (SELECT REZEPTNR FROM REZEPTZUTAT WHERE ZUTATENNR IN 
+   (SELECT ZUTATENNR FROM ZUTAT WHERE BEZEICHNUNG = "Zwiebel"))
+
+
+/******************************************************************************/
+/***       Auswahl aller Rezepte, die einen Preis nicht überschreiten       ***/
+/******************************************************************************/
+
+SELECT * FROM
+    (SELECT r.TITEL, SUM(z.NETTOPREIS * rz.MENGE) AS Preis FROM REZEPT AS r
+    JOIN REZEPTZUTAT AS rz
+    ON r.REZEPTNR = rz.REZEPTNR
+    JOIN ZUTAT AS z
+    ON z.ZUTATENNR = rz.ZUTATENNR
+    GROUP BY r.REZEPTNR) KALORIEN
+    WHERE Preis < 3
