@@ -1,105 +1,26 @@
 /******************************************************************************/
-/***                        Rezepte nach Kategorie                          ***/
+/***          Auswahl aller Zutaten eines Rezepts nach Rezeptname           ***/
+/******************************************************************************/
+
+SELECT REZEPT.TITEL, ZUTAT.BEZEICHNUNG, ZUTAT.EINHEIT, ZUTAT.NETTOPREIS, ZUTAT.KALORIEN, ZUTAT.KOHLENHYDRATE, ZUTAT.PROTEIN
+    FROM ZUTAT
+    INNER JOIN REZEPTZUTAT ON REZEPTZUTAT.ZUTATENNR = ZUTAT.ZUTATENNR
+    INNER JOIN REZEPT ON REZEPT.REZEPTNR = REZEPTZUTAT.REZEPTNR
+    WHERE REZEPT.TITEL = 'xxx';
+
+/******************************************************************************/
+/***       Auswahl aller Rezepte einer bestimmten Ernährungskategorie       ***/
 /******************************************************************************/
 
 /* 1 Kategorie */
-SELECT DISTINCT REZEPT.titel, REZEPT.inhalt, KATEGORIE.name FROM REZEPT, REZEPTKATEGORIE, KATEGORIE WHERE REZEPT.rezeptnr = REZEPTKATEGORIE.rezeptnr 
-    AND REZEPTKATEGORIE.kategorienr = KATEGORIE.kategorienr AND KATEGORIE.kategorienr = 000
+SELECT DISTINCT REZEPT.TITEL, REZEPT.INHALT, KATEGORIE.NAME FROM REZEPT, REZEPTKATEGORIE, KATEGORIE WHERE REZEPT.REZEPTNR = REZEPTKATEGORIE.REZEPTNR 
+    AND REZEPTKATEGORIE.KATEGORIENR = KATEGORIE.KATEGORIENR AND KATEGORIE.NAME = 'xxx';
 
 /* 2 Kategorien */
-SELECT DISTINCT REZEPT.titel, REZEPT.inhalt, KATEGORIE.name FROM REZEPT, REZEPTKATEGORIE, KATEGORIE WHERE 
-    REZEPT.rezeptnr = REZEPTKATEGORIE.rezeptnr 
-    AND REZEPTKATEGORIE.kategorienr = KATEGORIE.kategorienr 
-    AND (KATEGORIE.kategorienr = 000 OR KATEGORIE.kategorienr = 000) 
-
-/* 3 Kategorien */
-SELECT DISTINCT REZEPT.titel, REZEPT.inhalt, KATEGORIE.name FROM REZEPT, REZEPTKATEGORIE, KATEGORIE WHERE 
-    REZEPT.rezeptnr = REZEPTKATEGORIE.rezeptnr 
-    AND REZEPTKATEGORIE.kategorienr = KATEGORIE.kategorienr 
-    AND (KATEGORIE.kategorienr = 000 OR KATEGORIE.kategorienr = 000 OR KATEGORIE.kategorienr = 000) 
-
-/******************************************************************************/
-/***                       Rezepte nach Unverträglichkeit                   ***/
-/******************************************************************************/
-
-/* 1 Unverträglichkeit */
-SELECT DISTINCT REZEPT.titel, REZEPT.inhalt FROM REZEPT, REZEPTZUTAT, ZUTATUNVERTRAEGLICHKEIT, UNVERTRAEGLICHKEIT 
-    WHERE REZEPT.rezeptnr = REZEPTZUTAT.rezeptnr
-    AND REZEPTZUTAT.zutatennr = ZUTATUNVERTRAEGLICHKEIT.zutatennr 
-    AND ZUTATUNVERTRAEGLICHKEIT.unvernr != UNVERTRAEGLICHKEIT.unvernr 
-    AND UNVERTRAEGLICHKEIT.unvernr = 000
-
-/* 2 Unverträglichkeiten */
-SELECT DISTINCT REZEPT.titel, REZEPT.inhalt FROM REZEPT, REZEPTZUTAT, ZUTATUNVERTRAEGLICHKEIT, UNVERTRAEGLICHKEIT 
-    WHERE REZEPT.rezeptnr = REZEPTZUTAT.rezeptnr
-    AND REZEPTZUTAT.zutatennr = ZUTATUNVERTRAEGLICHKEIT.zutatennr 
-    AND ZUTATUNVERTRAEGLICHKEIT.unvernr = UNVERTRAEGLICHKEIT.unvernr 
-    AND (UNVERTRAEGLICHKEIT.unvernr != 000
-    AND UNVERTRAEGLICHKEIT.unvernr != 000)
-
-/* 3 Unverträglichkeiten */
-SELECT DISTINCT REZEPT.titel, REZEPT.inhalt FROM REZEPT, REZEPTZUTAT, ZUTATUNVERTRAEGLICHKEIT, UNVERTRAEGLICHKEIT 
-    WHERE REZEPT.rezeptnr = REZEPTZUTAT.rezeptnr
-    AND REZEPTZUTAT.zutatennr = ZUTATUNVERTRAEGLICHKEIT.zutatennr 
-    AND ZUTATUNVERTRAEGLICHKEIT.unvernr = UNVERTRAEGLICHKEIT.unvernr 
-    AND (UNVERTRAEGLICHKEIT.unvernr != 000
-    AND UNVERTRAEGLICHKEIT.unvernr != 000
-    AND UNVERTRAEGLICHKEIT.unvernr != 000)  
-
-/******************************************************************************/
-/***                                Beides                                  ***/
-/******************************************************************************/
-
-/* 1 Unverträglichkeit, 1 Kategorie */
-SELECT DISTINCT REZEPT.titel, REZEPT.inhalt FROM REZEPT, REZEPTZUTAT, ZUTATUNVERTRAEGLICHKEIT, UNVERTRAEGLICHKEIT, REZEPTKATEGORIE, KATEGORIE
-    WHERE (REZEPT.rezeptnr = REZEPTZUTAT.rezeptnr
-    AND REZEPTZUTAT.zutatennr = ZUTATUNVERTRAEGLICHKEIT.zutatennr 
-    AND ZUTATUNVERTRAEGLICHKEIT.unvernr != UNVERTRAEGLICHKEIT.unvernr 
-    AND UNVERTRAEGLICHKEIT.unvernr = 000)
-    AND (REZEPT.rezeptnr = REZEPTKATEGORIE.rezeptnr 
-    AND REZEPTKATEGORIE.kategorienr = KATEGORIE.kategorienr AND KATEGORIE.kategorienr = 000)
-
-/* 2 Unverträglichkeit, 1 Kategorie */
-SELECT DISTINCT REZEPT.titel, REZEPT.inhalt FROM REZEPT, REZEPTZUTAT, ZUTATUNVERTRAEGLICHKEIT, UNVERTRAEGLICHKEIT, REZEPTKATEGORIE, KATEGORIE
-    WHERE (REZEPT.rezeptnr = REZEPTZUTAT.rezeptnr
-    AND REZEPTZUTAT.zutatennr = ZUTATUNVERTRAEGLICHKEIT.zutatennr 
-    AND ZUTATUNVERTRAEGLICHKEIT.unvernr = UNVERTRAEGLICHKEIT.unvernr 
-    AND (UNVERTRAEGLICHKEIT.unvernr != 000
-    AND UNVERTRAEGLICHKEIT.unvernr != 000))
-    AND (REZEPT.rezeptnr = REZEPTKATEGORIE.rezeptnr 
-    AND REZEPTKATEGORIE.kategorienr = KATEGORIE.kategorienr AND KATEGORIE.kategorienr = 000)
-
-/* 1 Unverträglichkeit, 2 Kategorien */
-SELECT DISTINCT REZEPT.titel, REZEPT.inhalt FROM REZEPT, REZEPTZUTAT, ZUTATUNVERTRAEGLICHKEIT, UNVERTRAEGLICHKEIT, REZEPTKATEGORIE, KATEGORIE
-    WHERE (REZEPT.rezeptnr = REZEPTZUTAT.rezeptnr
-    AND REZEPTZUTAT.zutatennr = ZUTATUNVERTRAEGLICHKEIT.zutatennr 
-    AND ZUTATUNVERTRAEGLICHKEIT.unvernr != UNVERTRAEGLICHKEIT.unvernr 
-    AND UNVERTRAEGLICHKEIT.unvernr = 000)
-    AND (REZEPT.rezeptnr = REZEPTKATEGORIE.rezeptnr 
-    AND REZEPTKATEGORIE.kategorienr = KATEGORIE.kategorienr 
-    AND (KATEGORIE.kategorienr = 000 OR KATEGORIE.kategorienr = 000))
-
-/* 2 Unverträglichkeit, 2 Kategorien */
-SELECT DISTINCT REZEPT.titel, REZEPT.inhalt FROM REZEPT, REZEPTZUTAT, ZUTATUNVERTRAEGLICHKEIT, UNVERTRAEGLICHKEIT, REZEPTKATEGORIE, KATEGORIE
-    WHERE (REZEPT.rezeptnr = REZEPTZUTAT.rezeptnr
-    AND REZEPTZUTAT.zutatennr = ZUTATUNVERTRAEGLICHKEIT.zutatennr 
-    AND ZUTATUNVERTRAEGLICHKEIT.unvernr = UNVERTRAEGLICHKEIT.unvernr 
-    AND (UNVERTRAEGLICHKEIT.unvernr != 000
-    AND UNVERTRAEGLICHKEIT.unvernr != 000))
-    AND (REZEPT.rezeptnr = REZEPTKATEGORIE.rezeptnr 
-    AND REZEPTKATEGORIE.kategorienr = KATEGORIE.kategorienr 
-    AND (KATEGORIE.kategorienr = 000 OR KATEGORIE.kategorienr = 000))
-
-/******************************************************************************/
-/***                      Alle Zutaten nach Rezeptname                      ***/
-/******************************************************************************/
-
-SELECT ZUTAT.bezeichnung, ZUTAT.einheit, ZUTAT.nettopreis, ZUTAT.kalorien, ZUTAT.kohlenhydrate, ZUTAT.protein
-    FROM REZEPT, ZUTAT, REZEPTZUTAT 
-    WHERE ZUTAT.zutatennr = REZEPTZUTAT.zutatennr 
-    AND REZEPTZUTAT.rezeptnr = REZEPT.rezeptnr
-    AND REZEPT.rezeptnr IN
-    (SELECT REZEPTNR FROM REZEPT WHERE TITEL = "Kaiserschmarrn")
+SELECT DISTINCT REZEPT.TITEL, REZEPT.INHALT, KATEGORIE.name FROM REZEPT, REZEPTKATEGORIE, KATEGORIE WHERE 
+    REZEPT.REZEPTNR = REZEPTKATEGORIE.REZEPTNR 
+    AND REZEPTKATEGORIE.KATEGORIENR = KATEGORIE.KATEGORIENR 
+    AND (KATEGORIE.NAME = 'xxx' OR KATEGORIE.NAME = 'xxx') ;
 
 /******************************************************************************/
 /***      Durchschnittliche Nährwerte aller Bestellungen eines Kunden       ***/
@@ -110,7 +31,7 @@ SELECT KUNDE.KUNDENNR, KUNDE.VORNAME, KUNDE.NACHNAME, AVG(ZUTAT.KALORIEN) AS Kal
     LEFT JOIN BESTELLUNGZUTAT ON ZUTAT.ZUTATENNR = BESTELLUNGZUTAT.ZUTATENNR
     LEFT JOIN BESTELLUNG ON BESTELLUNGZUTAT.BESTELLNR = BESTELLUNG.BESTELLNR
     LEFT JOIN KUNDE ON BESTELLUNG.KUNDENNR = KUNDE.KUNDENNR
-    WHERE KUNDE.KUNDENNR = 000
+    WHERE KUNDE.KUNDENNR = 000;
 
 /******************************************************************************/
 /***               Zutaten, die keinem Rezept zugeordnet sind               ***/
@@ -130,7 +51,7 @@ SELECT * FROM
     JOIN ZUTAT AS Z
     ON Z.ZUTATENNR = RZ.ZUTATENNR
     GROUP BY R.REZEPTNR) KALORIEN
-    WHERE Kaloriensumme < 10000
+    WHERE Kaloriensumme < 10000;
 
 /******************************************************************************/
 /***                   Rezepte mit weniger als 5 Zutaten                    ***/
@@ -145,26 +66,7 @@ SELECT * FROM REZEPT
 
 SELECT * FROM REZEPT
     WHERE (5 > (SELECT COUNT(*) FROM REZEPTZUTAT WHERE REZEPTZUTAT.REZEPTNR = REZEPT.REZEPTNR))
-    AND REZEPTNR IN (SELECT REZEPTNR FROM REZEPTKATEGORIE WHERE KATEGORIENR IN (SELECT KATEGORIENR FROM KATEGORIE WHERE NAME = "Vegan"))
-
-/******************************************************************************/
-/***          Auswahl aller Zutaten eines Rezepts nach Rezeptname           ***/
-/******************************************************************************/
-
-SELECT DISTINCT REZEPT.TITEL, ZUTAT.BEZEICHNUNG, ZUTAT.EINHEIT, ZUTAT.NETTOPREIS, ZUTAT.KALORIEN, ZUTAT.KOHLENHYDRATE, ZUTAT.PROTEIN
-    FROM ZUTAT
-    INNER JOIN REZEPTZUTAT ON REZEPTZUTAT.ZUTATENNR = ZUTAT.ZUTATENNR
-    INNER JOIN REZEPT ON REZEPT.REZEPTNR = REZEPTZUTAT.REZEPTNR
-    WHERE REZEPT.TITEL = 'xxx'
-
-/******************************************************************************/
-/***        Auswahl aller Rezepte, die eine bestimme Zutat enthalten        ***/
-/******************************************************************************/
-
-SELECT * FROM REZEPT WHERE REZEPTNR IN 
-   (SELECT REZEPTNR FROM REZEPTZUTAT WHERE ZUTATENNR IN 
-   (SELECT ZUTATENNR FROM ZUTAT WHERE BEZEICHNUNG = "Zwiebel"))
-
+    AND REZEPTNR IN (SELECT REZEPTNR FROM REZEPTKATEGORIE WHERE KATEGORIENR IN (SELECT KATEGORIENR FROM KATEGORIE WHERE NAME = "Vegan"));
 
 /******************************************************************************/
 /***       Auswahl aller Rezepte, die einen Preis nicht überschreiten       ***/
@@ -177,4 +79,29 @@ SELECT * FROM
     JOIN ZUTAT AS Z
     ON Z.ZUTATENNR = RZ.ZUTATENNR
     GROUP BY R.REZEPTNR) KALORIEN
-    WHERE Preis < 3
+    WHERE Preis < 3;
+
+/******************************************************************************/
+/***                       Rezepte nach Unverträglichkeit                   ***/
+/******************************************************************************/
+
+/* 1 Unverträglichkeit */
+SELECT DISTINCT REZEPT.TITEL, REZEPT.INHALT FROM REZEPT, REZEPTZUTAT, ZUTATUNVERTRAEGLICHKEIT, UNVERTRAEGLICHKEIT 
+    WHERE REZEPT.REZEPTNR = REZEPTZUTAT.REZEPTNR
+    AND REZEPTZUTAT.ZUTATENNR = ZUTATUNVERTRAEGLICHKEIT.ZUTATENNR 
+    AND ZUTATUNVERTRAEGLICHKEIT.UNVERNR != UNVERTRAEGLICHKEIT.UNVERNR 
+    AND UNVERTRAEGLICHKEIT.NAME = 'xxx';
+
+/* 2 Unverträglichkeiten */
+SELECT DISTINCT REZEPT.TITEL, REZEPT.INHALT FROM REZEPT, REZEPTZUTAT, ZUTATUNVERTRAEGLICHKEIT, UNVERTRAEGLICHKEIT 
+    WHERE REZEPT.REZEPTNR = REZEPTZUTAT.REZEPTNR
+    AND REZEPTZUTAT.ZUTATENNR = ZUTATUNVERTRAEGLICHKEIT.ZUTATENNR 
+    AND ZUTATUNVERTRAEGLICHKEIT.UNVERNR = UNVERTRAEGLICHKEIT.UNVERNR 
+    AND (UNVERTRAEGLICHKEIT.NAME != 'xxx'
+    AND UNVERTRAEGLICHKEIT.NAME != 'xxx');
+
+/******************************************************************************/
+/***                     Anzahl der Rezepte nach Kategorie                  ***/
+/******************************************************************************/
+
+SELECT KATEGORIE.NAME, COUNT(REZEPTKATEGORIE.REZEPTNR) FROM KATEGORIE INNER JOIN REZEPTKATEGORIE ON REZEPTKATEGORIE.KATEGORIENR = KATEGORIE.KATEGORIENR GROUP BY KATEGORIE.NAME ORDER BY COUNT(REZEPTKATEGORIE.REZEPTNR) DESC;
