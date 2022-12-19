@@ -124,12 +124,12 @@ WHERE ZUTAT.ZUTATENNR NOT IN (SELECT BESTELLUNGZUTAT.ZUTATENNR FROM BESTELLUNGZU
 /******************************************************************************/
 
 SELECT * FROM
-    (SELECT r.TITEL, SUM(z.KALORIEN * rz.MENGE) AS Kaloriensumme FROM REZEPT AS r
-    JOIN REZEPTZUTAT AS rz
-    ON r.REZEPTNR = rz.REZEPTNR
-    JOIN ZUTAT AS z
-    ON z.ZUTATENNR = rz.ZUTATENNR
-    GROUP BY r.REZEPTNR) KALORIEN
+    (SELECT R.TITEL, SUM(Z.KALORIEN * RZ.MENGE) AS Kaloriensumme FROM REZEPT AS R
+    JOIN REZEPTZUTAT AS RZ
+    ON R.REZEPTNR = rz.REZEPTNR
+    JOIN ZUTAT AS Z
+    ON Z.ZUTATENNR = RZ.ZUTATENNR
+    GROUP BY R.REZEPTNR) KALORIEN
     WHERE Kaloriensumme < 10000
 
 /******************************************************************************/
@@ -151,11 +151,11 @@ SELECT * FROM REZEPT
 /***          Auswahl aller Zutaten eines Rezepts nach Rezeptname           ***/
 /******************************************************************************/
 
-SELECT DISTINCT REZEPT.titel, ZUTAT.bezeichnung, ZUTAT.einheit, ZUTAT.nettopreis, ZUTAT.kalorien, ZUTAT.kohlenhydrate, ZUTAT.protein
+SELECT DISTINCT REZEPT.TITEL, ZUTAT.BEZEICHNUNG, ZUTAT.EINHEIT, ZUTAT.NETTOPREIS, ZUTAT.KALORIEN, ZUTAT.KOHLENHYDRATE, ZUTAT.PROTEIN
     FROM ZUTAT
-    INNER JOIN REZEPTZUTAT ON REZEPTZUTAT.zutatennr = ZUTAT.zutatennr
-    INNER JOIN REZEPT ON REZEPT.rezeptnr = REZEPTZUTAT.rezeptnr
-    WHERE REZEPT.titel = 'xxx'
+    INNER JOIN REZEPTZUTAT ON REZEPTZUTAT.ZUTATENNR = ZUTAT.ZUTATENNR
+    INNER JOIN REZEPT ON REZEPT.REZEPTNR = REZEPTZUTAT.REZEPTNR
+    WHERE REZEPT.TITEL = 'xxx'
 
 /******************************************************************************/
 /***        Auswahl aller Rezepte, die eine bestimme Zutat enthalten        ***/
@@ -171,10 +171,10 @@ SELECT * FROM REZEPT WHERE REZEPTNR IN
 /******************************************************************************/
 
 SELECT * FROM
-    (SELECT r.TITEL, SUM(z.NETTOPREIS * rz.MENGE) AS Preis FROM REZEPT AS r
-    JOIN REZEPTZUTAT AS rz
-    ON r.REZEPTNR = rz.REZEPTNR
-    JOIN ZUTAT AS z
-    ON z.ZUTATENNR = rz.ZUTATENNR
-    GROUP BY r.REZEPTNR) KALORIEN
+    (SELECT R.TITEL, SUM(Z.NETTOPREIS * RZ.MENGE) AS Preis FROM REZEPT AS R
+    JOIN REZEPTZUTAT AS RZ
+    ON R.REZEPTNR = RZ.REZEPTNR
+    JOIN ZUTAT AS Z
+    ON Z.ZUTATENNR = RZ.ZUTATENNR
+    GROUP BY R.REZEPTNR) KALORIEN
     WHERE Preis < 3
