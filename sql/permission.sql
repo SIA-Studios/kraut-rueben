@@ -1,2 +1,4 @@
-GRANT SELECT ON krautundrueben.* TO 'till'@'localhost';
-GRANT ALL PRIVILEGES ON krautundrueben.* TO 'tim'@'localhost';
+CREATE USER 'user'@'%' IDENTIFIED BY 'password';
+
+GRANT SELECT ON krautundrueben.* TO 'user'@'%';
+GRANT ALL PRIVILEGES ON krautundrueben.* TO 'user'@'%';
