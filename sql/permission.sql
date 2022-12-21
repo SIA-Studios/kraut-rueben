@@ -33,14 +33,14 @@ GRANT ALL PRIVILEGES ON krautundrueben.* TO administrator;
 /***                            Benutzer Erstellung                         ***/
 /******************************************************************************/
 
-CREATE USER 'tom'@'%';
+CREATE USER 'tom'@'%' IDENTIFIED BY 'password';
 GRANT lieferant TO 'tom'@'%';
 
-CREATE USER 'till'@'%';
+CREATE USER 'till'@'%' IDENTIFIED BY 'password';
 GRANT praktikant TO 'till'@'%';
 
-CREATE USER 'tim'@'%';
+CREATE USER 'tim'@'%' IDENTIFIED BY 'password';
 GRANT mitarbeiter TO 'tim'@'%';
 
-CREATE USER 'finn'@'%';
+CREATE USER 'finn'@'%' IDENTIFIED BY 'password';
 GRANT administrator TO 'finn'@'%';
